@@ -124,7 +124,9 @@ class _inputBoxState extends State<inputBox> {
               obscureText: isshow & widget.ispassword,
               controller: widget.inputcontroller,
               decoration: InputDecoration(
-                border: InputBorder.none,
+                border: InputBorder.none, 
+                hintText:
+                    widget.inputname == "Date of Birth" ? "YYYY-MM-DD" : "", 
                 suffixIcon: widget.ispassword
                     ? IconButton(
                         onPressed: () {

@@ -10,6 +10,7 @@ class AttendanceController extends GetxController {
   RxBool present = true.obs;
   RxBool Absent = true.obs;
   RxBool isadmin = false.obs;
+  RxInt today = 0.obs;
   var items = [
     'STD 1',
     'STD 2',
@@ -20,14 +21,15 @@ class AttendanceController extends GetxController {
     'STD 7',
   ].obs;
   RxString selecteditem = 'STD 1'.obs;
+  RxBool isuploaded = true.obs;
   @override
   void onInit() async {
-    // TODO: implement onInit
     super.onInit();
     UserModel user = await AuthService.getuser();
     isadmin.value = user.isadmin;
     print(isadmin.value);
     selecteddate.value =
         ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
+    today.value = ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
   }
 }

@@ -102,57 +102,64 @@ class Attendancescreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // if (attendanceController.isadmin.value)
-                //   Container(
-                //     height: 500.h,
-                //     width: double.infinity,
-                //     // color: Colors.amber,
-                //     child: ListView.builder(
-                //       itemBuilder: (context, index) {
-                //         return Container(
-                //           margin: EdgeInsets.symmetric(
-                //             horizontal: 15.w,
-                //             vertical: 5.h,
-                //           ),
-                //           // color: Colors.blue,
-                //           child: ListTile(
-                //             title: Text(
-                //               "Vishal sah",
-                //               style: TextStyle(
-                //                 fontSize: 20.sp,
-                //                 fontWeight: FontWeight.w800,
-                //               ),
-                //             ),
-                //             subtitle: Text(
-                //               "0208cs211200",
-                //               style: TextStyle(
-                //                 fontSize: 14.sp,
-                //                 fontWeight: FontWeight.w700,
-                //               ),
-                //             ),
-                //             trailing: Container(
-                //               height: 50.h,
-                //               width: 100.w,
-                //               decoration: BoxDecoration(
-                //                 color: Colors.greenAccent,
-                //                 borderRadius: BorderRadius.circular(
-                //                   25.r,
-                //                 ),
-                //               ),
-                //               alignment: Alignment.center,
-                //               child: Text(
-                //                 "Present",
-                //                 style: TextStyle(
-                //                   fontSize: 16.sp,
-                //                   fontWeight: FontWeight.w700,
-                //                 ),
-                //               ),
-                //             ),
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   ),
+                Obx(() {
+                  if (attendanceController.isadmin.value &&
+                      attendanceController.selecteddate.value ==
+                          attendanceController.today.value) {
+                    return Container(
+                      height: 500.h,
+                      width: double.infinity,
+                      // color: Colors.amber,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 15.w,
+                              vertical: 5.h,
+                            ),
+                            // color: Colors.blue,
+                            child: ListTile(
+                              title: Text(
+                                "Vishal sah",
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "0208cs211200",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              trailing: Container(
+                                height: 50.h,
+                                width: 100.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.greenAccent,
+                                  borderRadius: BorderRadius.circular(
+                                    25.r,
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Present",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return Container();
+                }),
                 InkWell(
                   onTap: () {
                     attendanceController.present.value =
@@ -183,7 +190,7 @@ class Attendancescreen extends StatelessWidget {
                 ),
                 Obx(
                   () {
-                    if (!attendanceController.present.value) {
+                    if (attendanceController.present.value) {
                       return Container(
                         height: 500.h,
                         width: double.infinity,
@@ -209,6 +216,24 @@ class Attendancescreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                trailing: Container(
+                                  height: 50.h,
+                                  width: 100.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.greenAccent.shade100,
+                                    borderRadius: BorderRadius.circular(
+                                      25.r,
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Present",
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -276,6 +301,25 @@ class Attendancescreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                trailing: Container(
+                                  height: 50.h,
+                                  width: 100.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.redAccent,
+                                    borderRadius: BorderRadius.circular(
+                                      25.r,
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Absent",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: Size(393, 852),
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        title: 'schoolmanager',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
