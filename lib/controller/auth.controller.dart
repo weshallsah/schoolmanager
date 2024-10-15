@@ -9,14 +9,14 @@ import 'package:schoolmanager/service/auth.service.dart';
 
 class AuthController extends GetxController {
   TextEditingController school = TextEditingController();
-  TextEditingController enroll = TextEditingController();
+  TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   void submit() async {
     print("submitinggggg");
     final res = await http
         .post(Uri.parse('http://10.0.2.2:9000/api/v1/teacher/login'), body: {
       "school": school.text,
-      "enroll": enroll.text,
+      "email": email.text,
       "password": password.text
     });
     final response = jsonDecode(res.body);
@@ -24,7 +24,7 @@ class AuthController extends GetxController {
     if (response['status'] == 200) {
       await AuthService.setlogin(UserModel.fromJson(response['payload'], true));
       school.clear();
-      enroll.clear();
+      email.clear();
       password.clear();
       Get.offAll(Homescreen());
     }

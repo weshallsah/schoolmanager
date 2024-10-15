@@ -37,3 +37,19 @@ class AuthService {
     // print("response := ${res}");
   }
 }
+
+class AttendanceService {
+  static Future<bool> istaken(final date) async {
+    return await APICacheManager().isAPICacheKeyExist("attendance := ${date}");
+  }
+
+  static Future setlogin(final date) async {
+    APICacheDBModel cacheDBModel = APICacheDBModel(
+      key: "attendance := ${date}",
+      syncData: jsonEncode(
+        true,
+      ),
+    );
+    final res = await APICacheManager().addCacheData(cacheDBModel);
+  }
+}

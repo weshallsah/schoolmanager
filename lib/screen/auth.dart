@@ -42,7 +42,7 @@ class Authscreen extends StatelessWidget {
                 height: 20.h,
               ),
               GetBuilder<AuthController>(builder: (contrller) {
-                return inputBox("Email", contrller.enroll, false);
+                return inputBox("Email", contrller.email, false);
               }),
               SizedBox(
                 height: 20.h,
@@ -124,9 +124,10 @@ class _inputBoxState extends State<inputBox> {
               obscureText: isshow & widget.ispassword,
               controller: widget.inputcontroller,
               decoration: InputDecoration(
-                border: InputBorder.none, 
-                hintText:
-                    widget.inputname == "Date of Birth" ? "YYYY-MM-DD" : "", 
+                border: InputBorder.none,
+                labelText: widget.inputname == "Date of Birth"
+                    ? "YYYY-MM-DD"
+                    : widget.inputname,
                 suffixIcon: widget.ispassword
                     ? IconButton(
                         onPressed: () {

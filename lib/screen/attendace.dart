@@ -8,10 +8,12 @@ import 'package:table_calendar/table_calendar.dart';
 
 class Attendancescreen extends StatelessWidget {
   Attendancescreen({super.key});
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AttendanceController attendanceController = Get.put(AttendanceController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Manager"),
         ),
@@ -53,106 +55,157 @@ class Attendancescreen extends StatelessWidget {
                           SizedBox(
                             width: 5.w,
                           ),
-                          Obx(
-                            () => Container(
-                              alignment: Alignment.center,
-                              child: DropdownButton(
-                                value: attendanceController.selecteditem.value,
-                                items: attendanceController.items.map(
-                                  (element) {
-                                    return DropdownMenuItem(
-                                      child: Text(
-                                        element,
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.bold,
+                          Obx(() {
+                            if (attendanceController.isadmin.value &&
+                                attendanceController.selecteddate.value ==
+                                    attendanceController.today.value) {
+                              return Container(
+                                alignment: Alignment.center,
+                                child: DropdownButton(
+                                  value:
+                                      attendanceController.selecteditem.value,
+                                  items: attendanceController.items.map(
+                                    (element) {
+                                      return DropdownMenuItem(
+                                        child: Text(
+                                          element,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      value: element,
-                                    );
+                                        value: element,
+                                      );
+                                    },
+                                  ).toList(),
+                                  onChanged: (it) {
+                                    attendanceController.selecteditem.value =
+                                        it.toString();
                                   },
-                                ).toList(),
-                                onChanged: (it) {
-                                  attendanceController.selecteditem.value =
-                                      it.toString();
-                                },
+                                ),
+                              );
+                            }
+                            return Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "STD 1",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          )
+                            );
+                          })
                         ],
                       ),
-                      Container(
-                        height: 40.h,
-                        width: 90.w,
-                        decoration: BoxDecoration(
-                          color: Colors.greenAccent,
-                          borderRadius: BorderRadius.circular(
-                            25.r,
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "upload",
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
+                      Obx(() {
+                        if (!attendanceController.isadmin.value &&
+                            !attendanceController.istaken.value &&
+                            attendanceController.selecteddate.value ==
+                                attendanceController.today.value) {
+                          return InkWell(
+                            onTap: () {
+                              attendanceController.upload(_scaffoldKey);
+                            },
+                            child: Container(
+                              height: 40.h,
+                              width: 90.w,
+                              decoration: BoxDecoration(
+                                color: Colors.greenAccent,
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(
+                                  25.r,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "upload",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return Container();
+                      }),
                     ],
                   ),
                 ),
                 Obx(() {
-                  if (attendanceController.isadmin.value &&
+                  if (!attendanceController.isadmin.value &&
+                      !attendanceController.istaken.value &&
                       attendanceController.selecteddate.value ==
-                          attendanceController.today.value) {
+                          attendanceController.today.value &&
+                      attendanceController.cnt !=
+                          attendanceController.student.length) {
                     return Container(
                       height: 500.h,
                       width: double.infinity,
-                      // color: Colors.amber,
                       child: ListView.builder(
-                        itemCount: 5,
+                        itemCount: attendanceController.student.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 15.w,
-                              vertical: 5.h,
-                            ),
-                            // color: Colors.blue,
-                            child: ListTile(
-                              title: Text(
-                                "Vishal sah",
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "0208cs211200",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              trailing: Container(
-                                height: 50.h,
-                                width: 100.w,
-                                decoration: BoxDecoration(
-                                  color: Colors.greenAccent,
-                                  borderRadius: BorderRadius.circular(
-                                    25.r,
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Present",
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          return Obx(
+                            () {
+                              return attendanceController.presentlist[index] !=
+                                      ""
+                                  ? Container()
+                                  : Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 15.w,
+                                        vertical: 5.h,
+                                      ),
+                                      // color: Colors.blue,
+                                      child: ListTile(
+                                        title: Text(
+                                          attendanceController.student[index]
+                                              ['name'],
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          attendanceController.student[index]
+                                              ['enroll'],
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        trailing: InkWell(
+                                          onTap: () {
+                                            attendanceController
+                                                    .presentlist[index] =
+                                                attendanceController
+                                                    .student[index]['_id'];
+                                            attendanceController.cnt.value++;
+                                          },
+                                          child: Container(
+                                            height: 50.h,
+                                            width: 100.w,
+                                            decoration: BoxDecoration(
+                                              color: Colors.greenAccent,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                25.r,
+                                              ),
+                                              border: Border.all(),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Present",
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                            },
                           );
                         },
                       ),
@@ -195,48 +248,57 @@ class Attendancescreen extends StatelessWidget {
                         height: 500.h,
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: 5,
+                          itemCount: attendanceController.student.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 15.w,
-                                vertical: 5.h,
-                              ),
-                              // color: Colors.blue,
-                              child: ListTile(
-                                title: Text(
-                                  "Vishal sah",
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "0208cs211200",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                trailing: Container(
-                                  height: 50.h,
-                                  width: 100.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.greenAccent.shade100,
-                                    borderRadius: BorderRadius.circular(
-                                      25.r,
+                            return Obx(
+                              () => attendanceController.presentlist[index] ==
+                                      ""
+                                  ? Container()
+                                  : Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 15.w,
+                                        vertical: 5.h,
+                                      ),
+                                      // color: Colors.blue,
+                                      child: ListTile(
+                                        title: Text(
+                                          attendanceController.student[index]
+                                              ['name'],
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          attendanceController.student[index]
+                                              ['enroll'],
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                          height: 50.h,
+                                          width: 100.w,
+                                          decoration: BoxDecoration(
+                                            // color: Colors.greenAccent.shade100,
+                                            border: Border.all(),
+                                            borderRadius: BorderRadius.circular(
+                                              25.r,
+                                            ),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Present",
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              color: Colors.greenAccent,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Present",
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             );
                           },
                         ),
@@ -280,49 +342,56 @@ class Attendancescreen extends StatelessWidget {
                         height: 500.h,
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: 5,
+                          itemCount: attendanceController.student.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 15.w,
-                                vertical: 5.h,
-                              ),
-                              // color: Colors.blue,
-                              child: ListTile(
-                                title: Text(
-                                  "Vishal sah",
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "0208cs211200",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                trailing: Container(
-                                  height: 50.h,
-                                  width: 100.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.redAccent,
-                                    borderRadius: BorderRadius.circular(
-                                      25.r,
+                            // print(attendanceController.presentlist[index]);
+                            return Obx(
+                              () => attendanceController.presentlist[index] !=
+                                      ""
+                                  ? Container()
+                                  : Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 15.w,
+                                        vertical: 5.h,
+                                      ),
+                                      // color: Colors.blue,
+                                      child: ListTile(
+                                        title: Text(
+                                          "Vishal sah",
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          "0208cs211200",
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                          height: 50.h,
+                                          width: 100.w,
+                                          decoration: BoxDecoration(
+                                            // color: Colors.redAccent,
+                                            border: Border.all(),
+                                            borderRadius: BorderRadius.circular(
+                                              25.r,
+                                            ),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Absent",
+                                            style: TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Absent",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             );
                           },
                         ),
