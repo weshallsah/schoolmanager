@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/home.dart';
 import 'package:schoolmanager/service/auth.service.dart';
+import 'package:schoolmanager/utils/constant.dart';
 
 class AuthController extends GetxController {
   TextEditingController school = TextEditingController();
@@ -14,11 +15,12 @@ class AuthController extends GetxController {
   void submit() async {
     print("submitinggggg");
     final res = await http
-        .post(Uri.parse('http://10.0.2.2:9000/api/v1/teacher/login'), body: {
+        .post(Uri.parse('http://${localhost}/api/v1/teacher/login'), body: {
       "school": school.text,
       "email": email.text,
       "password": password.text
     });
+    print(res.body);
     final response = jsonDecode(res.body);
     // print(response);
     if (response['status'] == 200) {

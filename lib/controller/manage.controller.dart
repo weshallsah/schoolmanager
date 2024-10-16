@@ -5,6 +5,7 @@ import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/home.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:http/http.dart' as http;
+import 'package:schoolmanager/utils/constant.dart';
 
 class ManageController extends GetxController {
   RxList list = [].obs;
@@ -19,7 +20,7 @@ class ManageController extends GetxController {
       return;
     }
     final res = await http
-        .get(Uri.parse("http://10.0.2.2:9000/api/v1/teacher/list/${school}"));
+        .get(Uri.parse("http://${localhost}/api/v1/teacher/list/${school}"));
     print(res);
     final response = jsonDecode(res.body);
     print(response);

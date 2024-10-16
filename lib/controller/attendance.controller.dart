@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:http/http.dart' as http;
+import 'package:schoolmanager/utils/constant.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
 
 class AttendanceController extends GetxController {
@@ -39,7 +40,7 @@ class AttendanceController extends GetxController {
     school = user.school;
     // print(isadmin.value);
     final res = await http
-        .get(Uri.parse("http://10.0.2.2:9000/api/v1/student/list/${school}"));
+        .get(Uri.parse("http://${localhost}/api/v1/student/list/${school}"));
     final response = jsonDecode(res.body);
     // print(response);
     for (var teacher in response['payload']) {
@@ -58,7 +59,7 @@ class AttendanceController extends GetxController {
   Future getpresent() async {
     final res = await await http.get(
       Uri.parse(
-        "http://10.0.2.2:9000/api/v1/attendance/list/${selecteddate.toString()}/${school}",
+        "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${school}",
       ),
     );
     final Response = jsonDecode(res.body);
@@ -72,7 +73,7 @@ class AttendanceController extends GetxController {
     try {
       final res = await http.post(
           Uri.parse(
-            "http://10.0.2.2:9000/api/v1/attendance/upload/${today}/${school}",
+            "http://${localhost}/api/v1/attendance/upload/${today}/${school}",
           ),
           body: {
             "attendance": jsonEncode(presentlist),

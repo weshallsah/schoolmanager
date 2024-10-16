@@ -9,6 +9,7 @@ import 'package:schoolmanager/screen/Admission.dart';
 import 'package:schoolmanager/screen/Recrute.dart';
 import 'package:schoolmanager/screen/manage.dart';
 import 'package:schoolmanager/screen/marks.dart';
+import 'package:schoolmanager/utils/constant.dart';
 
 class Homescreen extends StatelessWidget {
   Homescreen({super.key});
@@ -379,7 +380,7 @@ class Greet extends StatelessWidget {
                 border: Border.all(),
                 image: DecorationImage(
                   image: NetworkImage(
-                    "http://10.0.2.2:9000/api/v1/teacher/viewphoto/${"670cc33b5bdac530295bc0c2"}",
+                    "http://${localhost}/api/v1/teacher/viewphoto/${"670cc33b5bdac530295bc0c2"}",
                   ),
                 ),
               ),

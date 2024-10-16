@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
+import 'package:schoolmanager/utils/constant.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
 
 class Markcontroller extends GetxController {
@@ -29,14 +30,14 @@ class Markcontroller extends GetxController {
     id = user.id;
     // print(isadmin.value);
     var res = await http
-        .get(Uri.parse("http://10.0.2.2:9000/api/v1/student/list/${school}"));
+        .get(Uri.parse("http://${localhost}/api/v1/student/list/${school}"));
     var response = jsonDecode(res.body);
     print(response);
     students.value = response['payload'];
 
     print("subjectsss gettttingggggg");
     res = await http.get(
-      Uri.parse("http://10.0.2.2:9000/api/v1/subjects/list/1"),
+      Uri.parse("http://${localhost}/api/v1/subjects/list/1"),
     );
     response = jsonDecode(res.body);
     print(response);
@@ -55,7 +56,7 @@ class Markcontroller extends GetxController {
         marks.add(formcontroller[i].text);
       }
       final res = await http
-          .post(Uri.parse("http://10.0.2.2:9000/api/v1/marks/upload"), body: {
+          .post(Uri.parse("http://${localhost}/api/v1/marks/upload"), body: {
         "student": students[index]['_id'],
         "teacher": id,
         "tream": tream.value.toString(),

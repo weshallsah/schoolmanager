@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
+import 'package:schoolmanager/utils/constant.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
 
 class Admissioncontroller extends GetxController {
@@ -60,7 +61,7 @@ class Admissioncontroller extends GetxController {
     try {
       var request = await http.MultipartRequest(
         'Post',
-        Uri.parse("http://10.0.2.2:9000/api/v1/student/admission"),
+        Uri.parse("http://${localhost}/api/v1/student/admission"),
       );
       request.fields['name'] = formfiled[0].value.text;
       request.fields['fathername'] = formfiled[1].value.text;

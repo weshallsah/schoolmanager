@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
+import 'package:schoolmanager/utils/constant.dart';
+import 'package:schoolmanager/utils/snakbar.dart';
 
 class ProgressController extends GetxController {
   RxList students = [].obs;
@@ -13,14 +17,28 @@ class ProgressController extends GetxController {
   // RxList marks = [].obs;
   RxInt isfeedback = 0.obs;
   RxList formfield = [].obs;
-
+  RxBool isgenerate = true.obs;
+  RxBool isadmin = false.obs;
+  var progress;
+  RxBool isloaded = false.obs;
+  var items = [
+    'STD 1',
+    'STD 2',
+    'STD 3',
+    'STD 4',
+    'STD 5',
+    'STD 6',
+    'STD 7',
+  ].obs;
+  RxString selecteditem = 'STD 1'.obs;
   @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
     UserModel userModel = await AuthService.getuser();
+    // isadmin.value = userModel.isadmin;
     final res = await http.get(Uri.parse(
-      "http://10.0.2.2:9000/api/v1/student/marks/${userModel.school}/${tream}/${1}",
+      "http://${localhost}/api/v1/student/marks/${userModel.school}/${tream}/${1}",
     ));
     print(res.body);
     final response = await jsonDecode(res.body);
@@ -29,13 +47,47 @@ class ProgressController extends GetxController {
     for (int i = 0; i < subject.length; i++) {
       formfield.add(TextEditingController());
     }
-    // for (int i = 0; i < students.length; i++) {
-    // subject.add(jsonDecode(response['payload'][i]['result']['subject'][0]));
-    // marks.add(response['payload'][i]['result']['marks']);
-    // }
   }
 
-  void getprogress() async {
-    
+  void Download(int idx) async {
+    final res = await http
+        .post(Uri.parse("http://${localhost}/api/v1/marks/download"), body: {
+      "tream": tream.value.toString(),
+      "markID": students[idx]['result']['_id'],
+    });
+    print(res.body);
+    final response = res.body;
+    print(response);
+    final tempDir = "/storage/emulated/0/Download/";
+    File file =
+        await File('${tempDir}/${students[idx]['enroll']}.png').create();
+    file.writeAsBytesSync(response.codeUnits);
+    // print(file.path);
+    progress = File(file.path);
+    isloaded.value = true;
+  }
+
+  Future generate(int idx, GlobalKey<ScaffoldState> _globalKey) async {
+    try {
+      List feedbacks = [];
+      for (int i = 0; i < subject.length; i++) {
+        feedbacks.add(formfield[i].text);
+      }
+      final res = await http
+          .post(Uri.parse("http://${localhost}/api/v1/marks/generate"), body: {
+        "feedbacks": jsonEncode(feedbacks),
+        "marks": students[idx]['result']['_id']
+      });
+      print(res.body);
+      final response = await jsonDecode(res.body);
+      // students.value = response['payload'];
+      print(response);
+      if (response['status'] == 200) {
+        // showtoast(_globalKey, "progress generated successfully", false);
+      }
+      if (response['status'] == 400) {
+        // showtoast(_globalKey, "Certificate alredy exist", false);
+      }
+    } catch (e) {}
   }
 }
