@@ -9,6 +9,7 @@ import 'package:schoolmanager/controller/splash.controller.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/attendace.dart';
 import 'package:http/http.dart' as http;
+import 'package:schoolmanager/screen/progress.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
 
@@ -61,7 +62,7 @@ class HomeController extends GetxController {
   }
 
   void Progress() {
-    print("progress");
+    Get.to(() => ProgressCard());
   }
 
   void leave() {

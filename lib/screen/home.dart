@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,18 +7,15 @@ import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/Admission.dart';
 import 'package:schoolmanager/screen/Recrute.dart';
-import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/manage.dart';
 import 'package:schoolmanager/screen/marks.dart';
 
 class Homescreen extends StatelessWidget {
   Homescreen({super.key});
   final HomeController homeController = Get.put(HomeController());
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Manager"),
         backgroundColor: Color.fromARGB(255, 236, 190, 190),
