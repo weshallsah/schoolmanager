@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:schoolmanager/controller/splash.controller.dart';
 import 'package:schoolmanager/models/user.models.dart';
+import 'package:schoolmanager/screen/Leaveing.dart';
 import 'package:schoolmanager/screen/attendace.dart';
 import 'package:http/http.dart' as http;
 import 'package:schoolmanager/screen/progress.dart';
@@ -66,7 +67,7 @@ class HomeController extends GetxController {
   }
 
   void leave() {
-    print("leave");
+    Get.to(() => LeaveingCertificate());
   }
 
   void logout() async {

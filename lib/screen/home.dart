@@ -58,7 +58,7 @@ class Homescreen extends StatelessWidget {
                   height: 25.h,
                 ),
                 Obx(
-                  () => homeController.isadmin.value
+                  () => !homeController.isadmin.value
                       ? principal(homeController)
                       : Teacher(homeController),
                 )
