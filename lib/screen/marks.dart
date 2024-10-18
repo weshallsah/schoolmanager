@@ -40,6 +40,7 @@ class Markscreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             markcontroller.tream.value = 1;
+                            markcontroller.onInit();
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -71,6 +72,7 @@ class Markscreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             markcontroller.tream.value = 2;
+                            markcontroller.onInit();
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(

@@ -6,10 +6,8 @@ void showtoast(
   ScaffoldMessenger.of(_scaffoldKey.currentContext as BuildContext)
       .showSnackBar(
     SnackBar(
-      behavior: SnackBarBehavior.floating,
-      // width: 250,
+      behavior: SnackBarBehavior.fixed,
       clipBehavior: Clip.antiAlias,
-      backgroundColor: Colors.black87,
       content: Text(
         text,
         style: TextStyle(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/constant.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
+
+// 5 9 13 14
 
 class Admissioncontroller extends GetxController {
   RxList<String> studenttitle = [
@@ -20,24 +23,26 @@ class Admissioncontroller extends GetxController {
     "Mother Toungue",
     "Place of Birth",
     "Aadhar number",
-    "Address"
+    "Address",
+    "religion",
+    "caste",
+    "serial",
+    "GRNo",
   ].obs;
   RxInt gender = 0.obs;
   RxString school = "".obs;
   RxBool isstudent = true.obs;
   RxBool isimage = false.obs;
   var image;
+  Rx<TextEditingController> standard = TextEditingController().obs;
+  Rx<TextEditingController> Dob = TextEditingController().obs;
+  RxList formfiled = List.filled(16, TextEditingController()).obs;
 
-  List<TextEditingController> formfiled =
-      List.filled(12, TextEditingController());
   @override
   void onInit() async {
-    // TODO: implement onInit
     super.onInit();
     UserModel userModel = await AuthService.getuser();
-    for (int i = 0; i < 12; i++) {
-      formfiled[i] = TextEditingController();
-    }
+    print(studenttitle.length);
     school.value = userModel.school;
   }
 
@@ -73,8 +78,11 @@ class Admissioncontroller extends GetxController {
       request.fields['placeofbrith'] = formfiled[7].value.text;
       request.fields['aadhar'] = formfiled[8].value.text;
       request.fields['address'] = formfiled[9].value.text;
-      request.fields['dob'] = formfiled[11].value.text;
-      request.fields['Standard'] = formfiled[10].value.text;
+      for (int i = 10; i < studenttitle.length; i++) {
+        request.fields[studenttitle[i]] = formfiled[i].value.text;
+      }
+      request.fields['dob'] = Dob.value.text;
+      request.fields['Standard'] = standard.value.text;
       request.fields['gender'] = gender.value.toString();
       request.fields['school'] = school.value;
       print(image?.path);
@@ -101,9 +109,11 @@ class Admissioncontroller extends GetxController {
       if (status == 400) {
         showtoast(_scaffoldKey, "student alredy exist", true);
       }
-      for (int i = 0; i < 11; i++) {
+      for (int i = 0; i < 16; i++) {
         formfiled[i].clear();
       }
+      standard.value.clear();
+      Dob.value.clear();
     } catch (e) {
       showtoast(_scaffoldKey, "somthing went wrong", true);
     }

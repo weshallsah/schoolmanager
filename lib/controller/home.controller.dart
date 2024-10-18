@@ -5,8 +5,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:schoolmanager/controller/splash.controller.dart';
 import 'package:schoolmanager/models/user.models.dart';
+import 'package:schoolmanager/screen/Bonafide.dart';
 import 'package:schoolmanager/screen/Leaveing.dart';
 import 'package:schoolmanager/screen/attendace.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +35,7 @@ class HomeController extends GetxController {
     school.value = userModel.school;
     isadmin.value = userModel.isadmin;
     photo.value = userModel.photo;
+    refresh();
   }
 
   void clicked(int idx) {
@@ -58,15 +61,30 @@ class HomeController extends GetxController {
     Get.to(() => Attendancescreen());
   }
 
-  void bonafide() {
-    print("bonafide");
+  void bonafide() async {
+    var status = await Permission.storage.status;
+    print(status);
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+    Get.to(() => Bonafide());
   }
 
-  void Progress() {
+  void Progress() async {
+    var status = await Permission.storage.status;
+    print(status);
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
     Get.to(() => ProgressCard());
   }
 
-  void leave() {
+  void leave() async {
+    var status = await Permission.storage.status;
+    print(status);
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
     Get.to(() => LeaveingCertificate());
   }
 

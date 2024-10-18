@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:schoolmanager/controller/Leaving.controller.dart';
 import 'package:schoolmanager/controller/progress.controller.dart';
+import 'package:schoolmanager/screen/Leaveing.dart';
 import 'package:schoolmanager/screen/marks.dart';
 import 'package:schoolmanager/screen/showimage.dart';
 
@@ -133,6 +135,7 @@ class ProgressCard extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             progresscontroller.tream.value = 1;
+                            progresscontroller.onInit();
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -164,6 +167,7 @@ class ProgressCard extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             progresscontroller.tream.value = 2;
+                            progresscontroller.onInit();
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -221,67 +225,71 @@ class DownloadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: progresscontroller.students.length,
-      itemBuilder: (context, index) {
-        return Obx(
-          () => Container(
-            // height: progresscontroller.isdownloading.value ? 600.h : null,
-            margin: EdgeInsets.symmetric(
-              horizontal: 20.w,
-              vertical: 10.h,
-            ),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(),
-              ),
-            ),
-            // color: Colors.amber,
-            child: ListTile(
-              title: Text(
-                progresscontroller.students[index]['name'],
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              subtitle: Text(
-                progresscontroller.students[index]['enroll'],
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              trailing: InkWell(
-                onTap: () {
-                  progresscontroller.isloaded.value = false;
-                  progresscontroller.Download(index);
-                  Get.to(() => Certificate(progresscontroller));
-                },
-                child: Container(
-                  height: 55.h,
-                  width: 120.w,
-                  decoration: BoxDecoration(
-                    // color: Colors.redAccent,
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(
-                      15.r,
+    return Obx(
+      () => ListView.builder(
+        itemCount: progresscontroller.students.length,
+        itemBuilder: (context, index) {
+          print(progresscontroller.students[index]);
+          return Obx(
+            () => progresscontroller.students[index]['result']['progress']
+                ? Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Download",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+                    // color: Colors.amber,
+                    child: ListTile(
+                      title: Text(
+                        progresscontroller.students[index]['name'],
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      subtitle: Text(
+                        progresscontroller.students[index]['enroll'],
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      trailing: InkWell(
+                        onTap: () {
+                          progresscontroller.Download(index);
+                          Get.to(() => Certificate(
+                              0, progresscontroller, LeavingController()));
+                        },
+                        child: Container(
+                          height: 55.h,
+                          width: 120.w,
+                          decoration: BoxDecoration(
+                            // color: Colors.redAccent,
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(
+                              15.r,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Download",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+          );
+        },
+      ),
     );
   }
 }

@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:get/get.dart';
+import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/main.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/auth.dart';
+import 'package:schoolmanager/screen/home.dart';
 
 class AuthService {
   static Future<bool> islogin() async {
@@ -26,7 +28,7 @@ class AuthService {
   }
 
   static Future setlogin(UserModel userModel) async {
-    print("usermodel := ${userModel.toJson()}");
+    // print("usermodel := ${userModel.toJson()}");
     APICacheDBModel cacheDBModel = APICacheDBModel(
       key: "Login",
       syncData: jsonEncode(
@@ -34,7 +36,6 @@ class AuthService {
       ),
     );
     final res = await APICacheManager().addCacheData(cacheDBModel);
-    // print("response := ${res}");
   }
 }
 

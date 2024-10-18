@@ -27,9 +27,10 @@ class Attendancescreen extends StatelessWidget {
                   minDate: DateTime.utc(2000, 1, 1),
                   maxDate: DateTime.utc(2050, 12, 31),
                   initialDate: DateTime.now(),
-                  onDateChange: (p0) {
+                  onDateChange: (p0) async {
                     attendanceController.selecteddate.value =
                         ((p0.year * 100) + p0.month) * 100 + p0.day;
+                    await attendanceController.getpresent();
                   },
                 ),
                 Container(
@@ -85,13 +86,15 @@ class Attendancescreen extends StatelessWidget {
                                 ),
                               );
                             }
-                            return Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "STD 1",
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
+                            return Obx(
+                              () => Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  attendanceController.std.value,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             );
@@ -146,6 +149,7 @@ class Attendancescreen extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: attendanceController.student.length,
                         itemBuilder: (context, index) {
+                          attendanceController.presentlist.value.add("");
                           return Obx(
                             () {
                               return attendanceController.presentlist[index] !=
@@ -231,11 +235,25 @@ class Attendancescreen extends StatelessWidget {
                         bottom: BorderSide(),
                       ),
                     ),
-                    child: Text(
-                      "Present student",
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
+                    child: Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Present student",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "${attendanceController.presentcnt.value}/${attendanceController.student.length}",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     alignment: Alignment.centerLeft,
@@ -247,60 +265,65 @@ class Attendancescreen extends StatelessWidget {
                       return Container(
                         height: 500.h,
                         width: double.infinity,
-                        child: ListView.builder(
-                          itemCount: attendanceController.student.length,
-                          itemBuilder: (context, index) {
-                            return Obx(
-                              () => attendanceController.presentlist[index] ==
-                                      ""
-                                  ? Container()
-                                  : Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 15.w,
-                                        vertical: 5.h,
-                                      ),
-                                      // color: Colors.blue,
-                                      child: ListTile(
-                                        title: Text(
-                                          attendanceController.student[index]
-                                              ['name'],
-                                          style: TextStyle(
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                        child: Obx(
+                          () => ListView.builder(
+                            itemCount: attendanceController.student.length,
+                            itemBuilder: (context, index) {
+                              attendanceController.presentlist.value.add("");
+                              attendanceController.presentcnt.value++;
+                              return Obx(
+                                () => attendanceController.presentlist[index] ==
+                                        ""
+                                    ? Container()
+                                    : Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 15.w,
+                                          vertical: 5.h,
                                         ),
-                                        subtitle: Text(
-                                          attendanceController.student[index]
-                                              ['enroll'],
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        trailing: Container(
-                                          height: 50.h,
-                                          width: 100.w,
-                                          decoration: BoxDecoration(
-                                            // color: Colors.greenAccent.shade100,
-                                            border: Border.all(),
-                                            borderRadius: BorderRadius.circular(
-                                              25.r,
+                                        // color: Colors.blue,
+                                        child: ListTile(
+                                          title: Text(
+                                            attendanceController.student[index]
+                                                ['name'],
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w800,
                                             ),
                                           ),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Present",
+                                          subtitle: Text(
+                                            attendanceController.student[index]
+                                                ['enroll'],
                                             style: TextStyle(
-                                              fontSize: 16.sp,
-                                              color: Colors.greenAccent,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
+                                          trailing: Container(
+                                            height: 50.h,
+                                            width: 100.w,
+                                            decoration: BoxDecoration(
+                                              // color: Colors.greenAccent.shade100,
+                                              border: Border.all(),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                25.r,
+                                              ),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Present",
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Colors.greenAccent,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       );
                     }
@@ -325,11 +348,25 @@ class Attendancescreen extends StatelessWidget {
                         bottom: BorderSide(),
                       ),
                     ),
-                    child: Text(
-                      "Absent student",
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
+                    child: Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Absent student",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "${attendanceController.student.length - attendanceController.presentcnt.value}/${attendanceController.student.length}",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     alignment: Alignment.centerLeft,
@@ -344,7 +381,7 @@ class Attendancescreen extends StatelessWidget {
                         child: ListView.builder(
                           itemCount: attendanceController.student.length,
                           itemBuilder: (context, index) {
-                            // print(attendanceController.presentlist[index]);
+                            attendanceController.presentlist.value.add("");
                             return Obx(
                               () => attendanceController.presentlist[index] !=
                                       ""
@@ -357,14 +394,16 @@ class Attendancescreen extends StatelessWidget {
                                       // color: Colors.blue,
                                       child: ListTile(
                                         title: Text(
-                                          "Vishal sah",
+                                          attendanceController.student[index]
+                                              ['name'],
                                           style: TextStyle(
                                             fontSize: 20.sp,
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
                                         subtitle: Text(
-                                          "0208cs211200",
+                                          attendanceController.student[index]
+                                              ['enroll'],
                                           style: TextStyle(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w700,

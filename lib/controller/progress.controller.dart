@@ -20,7 +20,7 @@ class ProgressController extends GetxController {
   RxBool isgenerate = true.obs;
   RxBool isadmin = false.obs;
   var progress;
-  RxBool isloaded = false.obs;
+  RxBool isloading = false.obs;
   var items = [
     'STD 1',
     'STD 2',
@@ -31,17 +31,23 @@ class ProgressController extends GetxController {
     'STD 7',
   ].obs;
   RxString selecteditem = 'STD 1'.obs;
+  UserModel? userModel;
   @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    UserModel userModel = await AuthService.getuser();
-    // isadmin.value = userModel.isadmin;
+    userModel = await AuthService.getuser();
+    isadmin.value = userModel!.isadmin;
     final res = await http.get(Uri.parse(
-      "http://${localhost}/api/v1/student/marks/${userModel.school}/${tream}/${1}",
+      "http://${localhost}/api/v1/student/marks/${userModel!.school}/${tream}/${1}",
     ));
     print(res.body);
     final response = await jsonDecode(res.body);
+
+    if (response['payload'].length <= 0) {
+      students.value = [];
+      return;
+    }
     students.value = response['payload'];
     subject.value = jsonDecode(response['payload'][0]['result']['subject'][0]);
     for (int i = 0; i < subject.length; i++) {
@@ -50,21 +56,27 @@ class ProgressController extends GetxController {
   }
 
   void Download(int idx) async {
-    final res = await http
-        .post(Uri.parse("http://${localhost}/api/v1/marks/download"), body: {
-      "tream": tream.value.toString(),
-      "markID": students[idx]['result']['_id'],
-    });
-    print(res.body);
-    final response = res.body;
-    print(response);
-    final tempDir = "/storage/emulated/0/Download/";
-    File file =
-        await File('${tempDir}/${students[idx]['enroll']}.png').create();
-    file.writeAsBytesSync(response.codeUnits);
-    // print(file.path);
-    progress = File(file.path);
-    isloaded.value = true;
+    try {
+      isloading.value = true;
+      final res = await http
+          .post(Uri.parse("http://${localhost}/api/v1/marks/download"), body: {
+        "tream": tream.value.toString(),
+        "markID": students[idx]['result']['_id'],
+      });
+      print(res.body);
+      final response = res.body;
+      print(response);
+      final tempDir = "/storage/emulated/0/Download/";
+      File file =
+          await File('${tempDir}/progress${students[idx]['enroll']}.png')
+              .create();
+      file.writeAsBytesSync(response.codeUnits);
+      print(file.path);
+      progress = File(file.path);
+      isloading.value = false;
+    } catch (e) {
+      print("Error := ${e}");
+    }
   }
 
   Future generate(int idx, GlobalKey<ScaffoldState> _globalKey) async {
@@ -83,10 +95,10 @@ class ProgressController extends GetxController {
       // students.value = response['payload'];
       print(response);
       if (response['status'] == 200) {
-        // showtoast(_globalKey, "progress generated successfully", false);
+        showtoast(_globalKey, "progress generated successfully", false);
       }
       if (response['status'] == 400) {
-        // showtoast(_globalKey, "Certificate alredy exist", false);
+        showtoast(_globalKey, "Certificate alredy exist", false);
       }
     } catch (e) {}
   }

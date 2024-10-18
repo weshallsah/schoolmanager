@@ -12,6 +12,7 @@ import 'package:schoolmanager/screen/marks.dart';
 import 'package:schoolmanager/utils/constant.dart';
 
 class Homescreen extends StatelessWidget {
+  // HomeController homeController;
   Homescreen({super.key});
   final HomeController homeController = Get.put(HomeController());
   @override
@@ -22,12 +23,10 @@ class Homescreen extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 236, 190, 190),
         toolbarHeight: 80.h,
         actions: [
-          GetBuilder<HomeController>(
-            builder: (controller) => IconButton(
-              onPressed: controller.logout,
-              icon: Icon(Icons.logout),
-            ),
-          )
+          IconButton(
+            onPressed: homeController.logout,
+            icon: Icon(Icons.logout),
+          ),
         ],
       ),
       body: Stack(
@@ -57,193 +56,199 @@ class Homescreen extends StatelessWidget {
                 SizedBox(
                   height: 25.h,
                 ),
-                Obx(
-                  () => !homeController.isadmin.value
-                      ? principal(homeController)
-                      : Teacher(homeController),
-                )
+                GetBuilder<HomeController>(builder: (controller) {
+                  return Obx(
+                    () => controller.isadmin.value
+                        ? principal(homeController)
+                        : Teacher(homeController),
+                  );
+                })
               ],
             ),
           ),
-          Obx(
-            () => homeController.isadmission.value
-                ? InkWell(
-                    onTap: () {
-                      homeController.isadmission.value = false;
-                    },
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.grey.withOpacity(0.3),
-                      alignment: Alignment.center,
+          GetBuilder<HomeController>(builder: (controller) {
+            return Obx(
+              () => controller.isadmission.value
+                  ? InkWell(
+                      onTap: () {
+                        controller.isadmission.value = false;
+                      },
                       child: Container(
-                        height: 300.h,
-                        width: 300.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(15.r),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              "Admin Panel",
-                              style: TextStyle(
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.w600,
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Colors.grey.withOpacity(0.3),
+                        alignment: Alignment.center,
+                        child: Container(
+                          height: 300.h,
+                          width: 300.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(15.r),
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10.h,
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => StudentForm());
-                              },
-                              child: Container(
-                                height: 60.h,
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 25.w,
-                                  vertical: 10.h,
+                              Text(
+                                "Admin Panel",
+                                style: TextStyle(
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                decoration: BoxDecoration(
-                                  // color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  border: Border.all(),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    Container(
-                                      width: 47.w,
-                                      child:
-                                          Image.asset('./assets/student.png'),
-                                    ),
-                                    SizedBox(
-                                      width: 36.w,
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Admission",
-                                        style: TextStyle(
-                                          fontSize: 22.sp,
-                                          fontWeight: FontWeight.bold,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() => StudentForm());
+                                },
+                                child: Container(
+                                  height: 60.h,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 25.w,
+                                    vertical: 10.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    border: Border.all(),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 26.w,
+                                      ),
+                                      Container(
+                                        width: 47.w,
+                                        child:
+                                            Image.asset('./assets/student.png'),
+                                      ),
+                                      SizedBox(
+                                        width: 36.w,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Admission",
+                                          style: TextStyle(
+                                            fontSize: 22.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => TeacherForm());
-                              },
-                              child: Container(
-                                height: 60.h,
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 25.w,
-                                  vertical: 10.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  // color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  border: Border.all(),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    Container(
-                                      width: 47.w,
-                                      child:
-                                          Image.asset('./assets/teacher.png'),
-                                    ),
-                                    SizedBox(
-                                      width: 36.w,
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "New Recruit",
-                                        style: TextStyle(
-                                          fontSize: 22.sp,
-                                          fontWeight: FontWeight.bold,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() => TeacherForm());
+                                },
+                                child: Container(
+                                  height: 60.h,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 25.w,
+                                    vertical: 10.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    border: Border.all(),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 26.w,
+                                      ),
+                                      Container(
+                                        width: 47.w,
+                                        child:
+                                            Image.asset('./assets/teacher.png'),
+                                      ),
+                                      SizedBox(
+                                        width: 36.w,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "New Recruit",
+                                          style: TextStyle(
+                                            fontSize: 22.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => Manage());
-                              },
-                              child: Container(
-                                height: 60.h,
-                                width: double.infinity,
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 25.w,
-                                  vertical: 10.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  // color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  border: Border.all(),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 26.w,
-                                    ),
-                                    Container(
-                                      width: 47.w,
-                                      child: Image.asset(
-                                          './assets/management.png'),
-                                    ),
-                                    SizedBox(
-                                      width: 36.w,
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "manage",
-                                        style: TextStyle(
-                                          fontSize: 22.sp,
-                                          fontWeight: FontWeight.bold,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() => Manage());
+                                },
+                                child: Container(
+                                  height: 60.h,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 25.w,
+                                    vertical: 10.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    border: Border.all(),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 26.w,
+                                      ),
+                                      Container(
+                                        width: 47.w,
+                                        child: Image.asset(
+                                            './assets/management.png'),
+                                      ),
+                                      SizedBox(
+                                        width: 36.w,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "manage",
+                                          style: TextStyle(
+                                            fontSize: 22.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                : Container(),
-          ),
+                    )
+                  : Container(),
+            );
+          }),
         ],
       ),
-      floatingActionButton: Obx(() =>
-          homeController.isadmin.value && !homeController.isadmission.value
-              ? FloatingActionButton(
-                  shape: CircleBorder(),
-                  onPressed: () {
-                    homeController.isadmission.value = true;
-                  },
-                  child: Icon(Icons.add),
-                )
-              : Container()),
+      floatingActionButton: GetBuilder<HomeController>(builder: (controller) {
+        return Obx(
+            () => controller.isadmin.value && !controller.isadmission.value
+                ? FloatingActionButton(
+                    shape: CircleBorder(),
+                    onPressed: () {
+                      controller.isadmission.value = true;
+                    },
+                    child: Icon(Icons.add),
+                  )
+                : Container());
+      }),
     );
   }
 }
@@ -371,16 +376,18 @@ class Greet extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              height: 80.h,
-              width: 80.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40.h),
-                color: Colors.amber,
-                border: Border.all(),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    "http://${localhost}/api/v1/teacher/viewphoto/${"670cc33b5bdac530295bc0c2"}",
+            Obx(
+              () => Container(
+                height: 80.h,
+                width: 80.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40.h),
+                  color: Colors.amber,
+                  border: Border.all(),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "http://${localhost}/api/v1/teacher/viewphoto/${homeController.photo}",
+                    ),
                   ),
                 ),
               ),

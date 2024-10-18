@@ -7,6 +7,7 @@ class UserModel {
     required this.id,
     required this.isadmin,
     required this.photo,
+    required this.std,
   });
   late final String school;
   late final String id;
@@ -15,18 +16,20 @@ class UserModel {
   late final String email;
   late final bool isadmin;
   late final String photo;
-  // late final String STD;
+  late final int std;
 
   UserModel.fromJson(Map<String, dynamic> json, bool isDB) {
     enroll = json['enroll'];
     // print(json['_id']);
     id = isDB ? json['_id'] : json['id'];
     // print(json['username']);
+
     name = json['name'];
     email = json['email'];
     school = json['school'];
     isadmin = json['isadmin'];
     photo = json['photo'];
+    std = json['standard'];
   }
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
@@ -37,6 +40,7 @@ class UserModel {
     _data['enroll'] = enroll;
     _data['isadmin'] = isadmin;
     _data['photo'] = photo;
+    _data['standard'] = std;
     return _data;
   }
 }

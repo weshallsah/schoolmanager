@@ -61,6 +61,8 @@ class TeacherForm extends StatelessWidget {
                 itemCount: recruitcontroller.teachertitle.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  recruitcontroller.formfiled.value
+                      .add(TextEditingController());
                   return inputBox(recruitcontroller.teachertitle[index],
                       recruitcontroller.formfiled[index], false);
                 },
@@ -83,7 +85,7 @@ class TeacherForm extends StatelessWidget {
                     width: 60.w,
                     child: TextField(
                       textAlign: TextAlign.center,
-                      controller: recruitcontroller.formfiled[9],
+                      controller: recruitcontroller.standard,
                       decoration: InputDecoration(
                           labelText: "STD",
                           labelStyle: TextStyle(
@@ -110,7 +112,7 @@ class TeacherForm extends StatelessWidget {
             ),
             inputBox(
               "Date of Birth",
-              recruitcontroller.formfiled[10],
+              recruitcontroller.DoB,
               false,
             ),
             SizedBox(

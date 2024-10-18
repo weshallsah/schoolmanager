@@ -12,9 +12,11 @@ import 'package:schoolmanager/utils/snakbar.dart';
 class AttendanceController extends GetxController {
   DateTime dateTime = DateTime.now();
   RxInt selecteddate = 0.obs;
-  RxBool present = true.obs;
-  RxBool Absent = true.obs;
+  RxBool present = false.obs;
+  RxBool Absent = false.obs;
   RxBool isadmin = false.obs;
+  RxInt presentcnt = 0.obs;
+  RxString std = "".obs;
   RxInt today = 0.obs;
   var items = [
     'STD 1',
@@ -30,24 +32,21 @@ class AttendanceController extends GetxController {
   RxList student = [].obs;
   RxList presentlist = [].obs;
   RxInt cnt = 0.obs;
-  String school = "";
   RxBool istaken = false.obs;
+  UserModel? user;
   @override
   void onInit() async {
     super.onInit();
-    UserModel user = await AuthService.getuser();
-    isadmin.value = user.isadmin;
-    school = user.school;
+    user = await AuthService.getuser();
+    isadmin.value = user!.isadmin;
+    std.value = "std ${user!.std}";
     // print(isadmin.value);
-    final res = await http
-        .get(Uri.parse("http://${localhost}/api/v1/student/list/${school}"));
+    final res = await http.get(
+        Uri.parse("http://${localhost}/api/v1/student/list/${user!.school}"));
     final response = jsonDecode(res.body);
     // print(response);
     for (var teacher in response['payload']) {
       student.add(teacher);
-    }
-    for (int i = 0; i < student.length; i++) {
-      presentlist.add("");
     }
     selecteddate.value =
         ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
@@ -59,13 +58,15 @@ class AttendanceController extends GetxController {
   Future getpresent() async {
     final res = await await http.get(
       Uri.parse(
-        "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${school}",
+        "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${user!.school}/${user!.std}",
       ),
     );
     final Response = jsonDecode(res.body);
     print(Response["payload"]);
     if (Response['payload'] != null) {
-      presentlist.value = Response["payload"]['present'];
+      for (int i = 0; i < Response['payload'].length; i++) {
+        presentlist.value[i] = Response['payload'][i];
+      }
     }
   }
 
@@ -73,7 +74,7 @@ class AttendanceController extends GetxController {
     try {
       final res = await http.post(
           Uri.parse(
-            "http://${localhost}/api/v1/attendance/upload/${today}/${school}",
+            "http://${localhost}/api/v1/attendance/upload/${today}/${user!.school}/${user!.std}",
           ),
           body: {
             "attendance": jsonEncode(presentlist),

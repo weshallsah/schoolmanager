@@ -25,16 +25,15 @@ class Recruitcontroller extends GetxController {
   RxBool isimage = false.obs;
   RxBool isadmission = false.obs;
   var image;
-  List<TextEditingController> formfiled =
-      List.filled(11, TextEditingController());
+  RxList formfiled = [].obs;
+  TextEditingController standard = TextEditingController();
+  TextEditingController DoB = TextEditingController();
+
   @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
     UserModel userModel = await AuthService.getuser();
-    for (int i = 0; i < 11; i++) {
-      formfiled[i] = TextEditingController();
-    }
     school.value = userModel.school;
   }
 
@@ -55,23 +54,33 @@ class Recruitcontroller extends GetxController {
   }
 
   void uploadteacher(GlobalKey<ScaffoldState> _scaffoldKey) async {
-    // for (var i = 0; i < 11; i++) {
-    //   print(formfiled[i].value.text);
-    // }
     try {
       var request = await http.MultipartRequest(
         'Post',
         Uri.parse("http://10.0.2.2:9000/api/v1/teacher/hire"),
       );
+      if (formfiled[0].value.text.isEmpty) {
+        throw "please enter name";
+      }
       request.fields['name'] = formfiled[0].value.text;
+      if (formfiled[1].value.text.isEmpty) {
+        throw "please give enrollment number";
+      }
       request.fields['enroll'] = formfiled[1].value.text;
       request.fields['fathername'] = formfiled[2].value.text;
+      if (formfiled[3].value.text.isEmpty) {
+        throw "please enter password";
+      }
       request.fields['password'] = formfiled[3].value.text;
       request.fields['mothername'] = formfiled[4].value.text;
       request.fields['phone'] = formfiled[5].value.text;
+      if (!formfiled[6].text.toString().isEmail) {
+        print(formfiled[6].value.text);
+        throw "please enter email";
+      }
       request.fields['email'] = formfiled[6].value.text;
       request.fields['address'] = formfiled[7].value.text;
-      request.fields['Standard'] = formfiled[9].value.text;
+      request.fields['Standard'] = standard.text;
       request.fields['dob'] = formfiled[10].value.text;
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = isnewadmin.value == 0 ? "true" : "false";
@@ -104,9 +113,12 @@ class Recruitcontroller extends GetxController {
       for (int i = 0; i < 11; i++) {
         formfiled[i].clear();
       }
+      standard.clear();
+      DoB.clear();
       isadmission.value = false;
+      image = null;
     } catch (e) {
-      showtoast(_scaffoldKey, "somthing went wrong", true);
+      showtoast(_scaffoldKey, e.toString(), true);
     }
   }
 }

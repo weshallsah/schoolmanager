@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
@@ -52,19 +53,32 @@ class StudentForm extends StatelessWidget {
               height: 10.h,
             ),
             Container(
-              height: 810.h,
               padding: EdgeInsets.symmetric(
                 horizontal: 35.w,
               ),
               // width: double.infinity,
-              child: ListView.builder(
-                itemCount: admissioncontroller.studenttitle.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  print(admissioncontroller.studenttitle[index]);
-                  return inputBox(admissioncontroller.studenttitle[index],
-                      admissioncontroller.formfiled[index], false);
-                },
+              child: Obx(
+                () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: admissioncontroller.studenttitle.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    print(admissioncontroller.studenttitle.length);
+                    admissioncontroller.formfiled[index] =
+                        TextEditingController();
+                    print(
+                        index == 4 || index == 8 || index == 12 || index == 13);
+                    return inputBox(
+                      admissioncontroller.studenttitle[index],
+                      admissioncontroller.formfiled[index],
+                      false,
+                      isnumber: index == 4 ||
+                          index == 8 ||
+                          index == 12 ||
+                          index == 13,
+                    );
+                  },
+                ),
               ),
             ),
             Container(
@@ -84,7 +98,8 @@ class StudentForm extends StatelessWidget {
                     width: 60.w,
                     child: TextField(
                       textAlign: TextAlign.center,
-                      controller: admissioncontroller.formfiled[10],
+                      controller: admissioncontroller.standard.value,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           labelText: "STD",
                           labelStyle: TextStyle(
@@ -106,14 +121,16 @@ class StudentForm extends StatelessWidget {
             ),
             inputBox(
               "Date of Birth",
-              admissioncontroller.formfiled[11],
+              admissioncontroller.Dob.value,
               false,
+              isdate: true,
             ),
             SizedBox(
-              height: 10.h,
+              height: 20.h,
             ),
             InkWell(
               onTap: () {
+                FocusScope.of(context).unfocus();
                 admissioncontroller.uploadstudent(_scaffoldKey);
               },
               child: Container(

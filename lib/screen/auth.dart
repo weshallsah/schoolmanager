@@ -13,10 +13,12 @@ import 'package:schoolmanager/service/auth.service.dart';
 class Authscreen extends StatelessWidget {
   Authscreen({super.key});
   AuthController authController = Get.put(AuthController());
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -54,26 +56,34 @@ class Authscreen extends StatelessWidget {
                 height: 60.h,
               ),
               GetBuilder<AuthController>(builder: (contrller) {
-                return InkWell(
-                  onTap: contrller.submit,
-                  child: Container(
-                    height: 56.h,
-                    width: 200.w,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      border: Border.all(
-                          color: Colors.black,
-                          style: BorderStyle.solid,
-                          width: 1.w),
-                      borderRadius: BorderRadius.circular(9.r),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                return Obx(
+                  () => InkWell(
+                    onTap: () {
+                      if (!contrller.isloading.value) {
+                        contrller.submit(_globalKey);
+                      }
+                    },
+                    child: Container(
+                      height: 56.h,
+                      width: 200.w,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        border: Border.all(
+                            color: Colors.black,
+                            style: BorderStyle.solid,
+                            width: 1.w),
+                        borderRadius: BorderRadius.circular(9.r),
                       ),
+                      alignment: Alignment.center,
+                      child: contrller.isloading.value
+                          ? CircularProgressIndicator()
+                          : Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 );
@@ -90,7 +100,10 @@ class inputBox extends StatefulWidget {
   String inputname;
   TextEditingController inputcontroller;
   bool ispassword;
-  inputBox(this.inputname, this.inputcontroller, this.ispassword, {super.key});
+  bool isnumber;
+  bool isdate;
+  inputBox(this.inputname, this.inputcontroller, this.ispassword,
+      {this.isnumber = false, this.isdate = false, super.key});
 
   @override
   State<inputBox> createState() => _inputBoxState();
@@ -123,6 +136,11 @@ class _inputBoxState extends State<inputBox> {
             child: TextFormField(
               obscureText: isshow & widget.ispassword,
               controller: widget.inputcontroller,
+              keyboardType: widget.isnumber
+                  ? TextInputType.number
+                  : widget.isdate
+                      ? TextInputType.datetime
+                      : null,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 labelText: widget.inputname == "Date of Birth"
