@@ -35,13 +35,7 @@ class Authscreen extends StatelessWidget {
                 child: Image.asset("./assets/school.png"),
               ),
               SizedBox(
-                height: 30.h,
-              ),
-              GetBuilder<AuthController>(builder: (contrller) {
-                return inputBox("School name", contrller.school, false);
-              }),
-              SizedBox(
-                height: 20.h,
+                height: 50.h,
               ),
               GetBuilder<AuthController>(builder: (contrller) {
                 return inputBox("Email", contrller.email, false);

@@ -22,6 +22,7 @@ class ManageController extends GetxController {
     'STD 7',
   ].obs;
   RxList selecteditem = [].obs;
+  RxMap teacherstd = {}.obs;
   // RxString selecteditem = 'STD 1'.obs;
   String school = "";
   @override
@@ -39,12 +40,20 @@ class ManageController extends GetxController {
     final response = jsonDecode(res.body);
     print(response);
     list.value = response['payload'];
-    // for (var teacher in response['payload']) {
-    //   list.add(teacher);
-    // }
+    for (var teacher in response['payload']) {
+      // list.add(teacher);
+      if (teacher['standard'] == -1) {
+        // teacherstd['-1'] = false;
+        print("teacher has -1");
+        continue;
+      }
+      print("teacher dont have -1");
+      teacherstd["${teacher['standard']}"] = true;
+    }
   }
 
   void standard(GlobalKey<ScaffoldState> _gloabalkey, int index) async {
+    bool ismy = false;
     try {
       String digit = "";
       print(selecteditem[index]);
@@ -53,8 +62,16 @@ class ManageController extends GetxController {
         if (selecteditem[index][i].toString().isNum) {
           digit = selecteditem[index][i] + digit;
         }
+        if (selecteditem[index][i] == '-') {
+          digit = selecteditem[index][i] + digit;
+        }
       }
-      print(digit);
+      // print(digit);
+      // print(teacherstd[digit]);
+      if (teacherstd[digit]) {
+        ismy = true;
+        throw "standard alredy have a teacher";
+      }
       final res = await http.get(Uri.parse(
           "http://${localhost}/api/v1/teacher/standard/${list[index]['_id']}/${digit}"));
       final response = jsonDecode(res.body);
@@ -68,7 +85,8 @@ class ManageController extends GetxController {
       }
     } catch (e) {
       print("Error  :=  ${e}");
-      showtoast(_gloabalkey, "Something went wrong", true);
+      showtoast(
+          _gloabalkey, ismy ? e.toString() : "Something went wrong", true);
     }
   }
 

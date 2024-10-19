@@ -301,219 +301,225 @@ class Generate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: progresscontroller.students.length,
-      itemBuilder: (context, index) {
-        return Obx(
-          () => progresscontroller.students[index]['result']['progress']
-              ? Container()
-              : Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 10.h,
-                  ),
-                  height: progresscontroller.isfeedback.value == index + 1
-                      ? 600.h
-                      : null,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(),
+    return Obx(
+      () => ListView.builder(
+        itemCount: progresscontroller.students.length,
+        itemBuilder: (context, index) {
+          return Obx(
+            () => progresscontroller.students[index]['result']['progress'] ||
+                    progresscontroller.students[index]['result']['tream'] !=
+                        progresscontroller.tream.value
+                ? Container()
+                : Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
+                    ),
+                    height: progresscontroller.isfeedback.value == index + 1
+                        ? 600.h
+                        : null,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(),
+                      ),
+                    ),
+                    // color: Colors.amber,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            progresscontroller.students[index]['name'],
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          subtitle: Text(
+                            progresscontroller.students[index]['enroll'],
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          trailing: InkWell(
+                            onTap: () {
+                              if (progresscontroller.isfeedback.value ==
+                                  index + 1) {
+                                progresscontroller.isfeedback.value = 0;
+                                return;
+                              }
+                              progresscontroller.isfeedback.value = index + 1;
+                            },
+                            child: Container(
+                              height: 55.h,
+                              width: 120.w,
+                              decoration: BoxDecoration(
+                                // color: Colors.redAccent,
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(
+                                  15.r,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Feedback",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Obx(
+                          () => progresscontroller.isfeedback.value == index + 1
+                              ? Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 25.w,
+                                          vertical: 5.h,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Subjects",
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Marks",
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 420.h,
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              progresscontroller.subject.length,
+                                          itemBuilder: (context, idx) {
+                                            print(progresscontroller
+                                                .subject[idx]);
+                                            return Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 25.w,
+                                                vertical: 5.h,
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        progresscontroller
+                                                            .subject[idx],
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        progresscontroller
+                                                            .students[index]
+                                                                ['result']
+                                                                ['marks'][idx]
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    // height: 30,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                      vertical: 5.h,
+                                                    ),
+                                                    child: TextField(
+                                                      controller:
+                                                          progresscontroller
+                                                              .formfield[idx],
+                                                      maxLength: 80,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        labelText: "Feedback",
+                                                        labelStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 15.h,
+                                      ),
+                                      InkWell(
+                                        onTap: () async {
+                                          await progresscontroller.generate(
+                                              index, _globalKey);
+                                          progresscontroller.students[index]
+                                              ['result']['progress'] = true;
+                                        },
+                                        child: Container(
+                                          height: 56.h,
+                                          width: 200.w,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                            border: Border.all(
+                                                color: Colors.black,
+                                                style: BorderStyle.solid,
+                                                width: 1.w),
+                                            borderRadius:
+                                                BorderRadius.circular(9.r),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Generate Progress",
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // Subjects(markcontroller),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                        ),
+                      ],
                     ),
                   ),
-                  // color: Colors.amber,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          progresscontroller.students[index]['name'],
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        subtitle: Text(
-                          progresscontroller.students[index]['enroll'],
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        trailing: InkWell(
-                          onTap: () {
-                            if (progresscontroller.isfeedback.value ==
-                                index + 1) {
-                              progresscontroller.isfeedback.value = 0;
-                              return;
-                            }
-                            progresscontroller.isfeedback.value = index + 1;
-                          },
-                          child: Container(
-                            height: 55.h,
-                            width: 120.w,
-                            decoration: BoxDecoration(
-                              // color: Colors.redAccent,
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(
-                                15.r,
-                              ),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Feedback",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => progresscontroller.isfeedback.value == index + 1
-                            ? Expanded(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 25.w,
-                                        vertical: 5.h,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Subjects",
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Marks",
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 420.h,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount:
-                                            progresscontroller.subject.length,
-                                        itemBuilder: (context, idx) {
-                                          print(
-                                              progresscontroller.subject[idx]);
-                                          return Container(
-                                            margin: EdgeInsets.symmetric(
-                                              horizontal: 25.w,
-                                              vertical: 5.h,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      progresscontroller
-                                                          .subject[idx],
-                                                      style: TextStyle(
-                                                        fontSize: 20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      progresscontroller
-                                                          .students[index]
-                                                              ['result']
-                                                              ['marks'][idx]
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontSize: 20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  // height: 30,
-                                                  margin: EdgeInsets.symmetric(
-                                                    vertical: 5.h,
-                                                  ),
-                                                  child: TextField(
-                                                    controller:
-                                                        progresscontroller
-                                                            .formfield[idx],
-                                                    maxLength: 80,
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      labelText: "Feedback",
-                                                      labelStyle: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 15.h,
-                                    ),
-                                    InkWell(
-                                      onTap: () async {
-                                        await progresscontroller.generate(
-                                            index, _globalKey);
-                                        progresscontroller.students[index]
-                                            ['result']['progress'] = true;
-                                      },
-                                      child: Container(
-                                        height: 56.h,
-                                        width: 200.w,
-                                        decoration: BoxDecoration(
-                                          color: Colors.amber,
-                                          border: Border.all(
-                                              color: Colors.black,
-                                              style: BorderStyle.solid,
-                                              width: 1.w),
-                                          borderRadius:
-                                              BorderRadius.circular(9.r),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Generate Progress",
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // Subjects(markcontroller),
-                                  ],
-                                ),
-                              )
-                            : Container(),
-                      ),
-                    ],
-                  ),
-                ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

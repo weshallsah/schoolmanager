@@ -47,7 +47,7 @@ class Attendancescreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "select ",
+                            "selected ",
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -57,9 +57,7 @@ class Attendancescreen extends StatelessWidget {
                             width: 5.w,
                           ),
                           Obx(() {
-                            if (attendanceController.isadmin.value &&
-                                attendanceController.selecteddate.value ==
-                                    attendanceController.today.value) {
+                            if (attendanceController.isadmin.value) {
                               return Container(
                                 alignment: Alignment.center,
                                 child: DropdownButton(
@@ -82,6 +80,7 @@ class Attendancescreen extends StatelessWidget {
                                   onChanged: (it) {
                                     attendanceController.selecteditem.value =
                                         it.toString();
+                                    attendanceController.onInit();
                                   },
                                 ),
                               );
@@ -149,11 +148,11 @@ class Attendancescreen extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: attendanceController.student.length,
                         itemBuilder: (context, index) {
-                          attendanceController.presentlist.value.add("");
                           return Obx(
                             () {
-                              return attendanceController.presentlist[index] !=
-                                      ""
+                              return attendanceController.presentlist[
+                                      attendanceController.student[index]
+                                          ['_id']]
                                   ? Container()
                                   : Container(
                                       margin: EdgeInsets.symmetric(
@@ -180,11 +179,13 @@ class Attendancescreen extends StatelessWidget {
                                         ),
                                         trailing: InkWell(
                                           onTap: () {
-                                            attendanceController
-                                                    .presentlist[index] =
+                                            attendanceController.presentlist[
                                                 attendanceController
-                                                    .student[index]['_id'];
+                                                        .student[index]
+                                                    ['_id']] = true;
                                             attendanceController.cnt.value++;
+                                            attendanceController
+                                                .presentcnt.value++;
                                           },
                                           child: Container(
                                             height: 50.h,
@@ -269,11 +270,16 @@ class Attendancescreen extends StatelessWidget {
                           () => ListView.builder(
                             itemCount: attendanceController.student.length,
                             itemBuilder: (context, index) {
-                              attendanceController.presentlist.value.add("");
-                              attendanceController.presentcnt.value++;
+                              // if (attendanceController.presentlist.length <
+                              //     index + 1) {
+                              //   attendanceController.presentlist.value
+                              //       .add(null);
+                              // }
+                              // attendanceController.presentcnt.value++;
                               return Obx(
-                                () => attendanceController.presentlist[index] ==
-                                        ""
+                                () => !attendanceController.presentlist[
+                                        attendanceController.student[index]
+                                            ['_id']]
                                     ? Container()
                                     : Container(
                                         margin: EdgeInsets.symmetric(
@@ -381,10 +387,10 @@ class Attendancescreen extends StatelessWidget {
                         child: ListView.builder(
                           itemCount: attendanceController.student.length,
                           itemBuilder: (context, index) {
-                            attendanceController.presentlist.value.add("");
                             return Obx(
-                              () => attendanceController.presentlist[index] !=
-                                      ""
+                              () => attendanceController.presentlist[
+                                      attendanceController.student[index]
+                                          ['_id']]
                                   ? Container()
                                   : Container(
                                       margin: EdgeInsets.symmetric(

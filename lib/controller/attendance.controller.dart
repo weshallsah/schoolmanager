@@ -30,7 +30,7 @@ class AttendanceController extends GetxController {
   RxString selecteditem = 'STD 1'.obs;
   RxBool isuploaded = true.obs;
   RxList student = [].obs;
-  RxList presentlist = [].obs;
+  RxMap presentlist = {}.obs;
   RxInt cnt = 0.obs;
   RxBool istaken = false.obs;
   UserModel? user;
@@ -40,13 +40,26 @@ class AttendanceController extends GetxController {
     user = await AuthService.getuser();
     isadmin.value = user!.isadmin;
     std.value = "std ${user!.std}";
-    // print(isadmin.value);
-    final res = await http.get(
-        Uri.parse("http://${localhost}/api/v1/student/list/${user!.school}"));
+    String digit = "";
+    // print(selecteditem);
+    for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+      // print(selecteditem[index][i]);
+      if (selecteditem.value[i].toString().isNum) {
+        digit = selecteditem.value[i] + digit;
+      }
+    }
+    final res = await http.get(Uri.parse(
+        "http://${localhost}/api/v1/student/list/${user!.school}/${digit}"));
     final response = jsonDecode(res.body);
-    // print(response);
-    for (var teacher in response['payload']) {
-      student.add(teacher);
+    print(response);
+    if (response['payload'].length > 0) {
+      student.value = response['payload'];
+      for (var st in student) {
+        print(st['_id']);
+        presentlist.value[st['_id']] = false;
+      }
+    } else {
+      student.value = [];
     }
     selecteddate.value =
         ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
@@ -56,28 +69,60 @@ class AttendanceController extends GetxController {
   }
 
   Future getpresent() async {
-    final res = await await http.get(
-      Uri.parse(
-        "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${user!.school}/${user!.std}",
-      ),
-    );
-    final Response = jsonDecode(res.body);
-    print(Response["payload"]);
-    if (Response['payload'] != null) {
-      for (int i = 0; i < Response['payload'].length; i++) {
-        presentlist.value[i] = Response['payload'][i];
+    try {
+      String digit = "";
+      // print(selecteditem);
+      for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+        // print(selecteditem[index][i]);
+        if (selecteditem.value[i].toString().isNum) {
+          digit = selecteditem.value[i] + digit;
+        }
       }
+      final res = await await http.get(
+        Uri.parse(
+          "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${user!.school}/${digit}",
+        ),
+      );
+      final Response = jsonDecode(res.body);
+      // print(Response["payload"]);
+      if (res.statusCode != 200) {
+        throw 'something went wrong';
+      }
+      if (Response['payload'] == null) {
+        presentcnt.value = 0;
+        return;
+      }
+      // if (Response['payload']['present'] != null) {
+      //   presentlist.value = Response['payload']['present'];
+      // }
+      for (var element in Response['payload']['present']) {
+        if (element != null) {
+          print(element);
+          presentlist.value[element] = true;
+          presentcnt.value++;
+        }
+      }
+      refresh();
+    } catch (e) {
+      print(e);
     }
   }
 
   void upload(GlobalKey<ScaffoldState> _scaffoldKey) async {
     try {
+      List presentupload = [];
+      for (int i = 0; i < student.length; i++) {
+        if (presentlist[student[i]['_id']]) {
+          presentupload.add(student[i]['_id']);
+        }
+      }
+      print(presentupload);
       final res = await http.post(
           Uri.parse(
             "http://${localhost}/api/v1/attendance/upload/${today}/${user!.school}/${user!.std}",
           ),
           body: {
-            "attendance": jsonEncode(presentlist),
+            "attendance": jsonEncode(presentupload),
           });
       print(res.body);
       final Response = jsonDecode(res.body);

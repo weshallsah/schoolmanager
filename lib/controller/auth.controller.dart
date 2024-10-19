@@ -10,7 +10,6 @@ import 'package:schoolmanager/utils/constant.dart';
 import 'package:schoolmanager/utils/snakbar.dart';
 
 class AuthController extends GetxController {
-  TextEditingController school = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   RxBool isloading = false.obs;
@@ -19,9 +18,6 @@ class AuthController extends GetxController {
       FocusScope.of(_scaffoldkey.currentContext as BuildContext).unfocus();
       isloading.value = true;
       print("submitinggggg");
-      if (school.text.isEmpty) {
-        throw "Please enter school name";
-      }
       if (password.text.isEmpty) {
         throw "please enter password";
       }
@@ -31,7 +27,6 @@ class AuthController extends GetxController {
       // print("false");
       final res = await http
           .post(Uri.parse('http://${localhost}/api/v1/teacher/login'), body: {
-        "school": school.text,
         "email": email.text,
         "password": password.text
       });
@@ -42,7 +37,6 @@ class AuthController extends GetxController {
         showtoast(_scaffoldkey, "Login successful", false);
         await AuthService.setlogin(
             UserModel.fromJson(response['payload'], true));
-        school.clear();
         email.clear();
         password.clear();
         Get.offAll(()=>Homescreen());

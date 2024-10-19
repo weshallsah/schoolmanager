@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:schoolmanager/controller/splash.controller.dart';
-import 'package:schoolmanager/screen/auth.dart';
-import 'package:schoolmanager/screen/home.dart';
-import 'package:schoolmanager/service/auth.service.dart';
 
 void main() {
   runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
@@ -24,7 +22,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Scaffold(
+        home: const Scaffold(
           body: Center(
             child: CircularProgressIndicator(),
           ),

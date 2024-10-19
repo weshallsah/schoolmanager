@@ -12,7 +12,7 @@ class Markcontroller extends GetxController {
   RxInt isupload = 0.obs;
   RxList subjects = [].obs;
   RxList students = [].obs;
-  RxList uploaded = [].obs;
+  RxMap uploaded = {}.obs;
   List formcontroller = [];
   String school = "";
   String id = "";
@@ -22,37 +22,56 @@ class Markcontroller extends GetxController {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    for (int i = 0; i < 100; i++) {
-      uploaded.add(false);
-    }
+
     UserModel user = await AuthService.getuser();
     school = user.school;
     id = user.id;
-    // print(isadmin.value);
-    var res = await http
-        .get(Uri.parse("http://${localhost}/api/v1/student/list/${school}"));
+    var res = await http.get(Uri.parse(
+      "http://${localhost}/api/v1/student/list/${school}/${user.std}",
+    ));
+    // print(res.body);
     var response = jsonDecode(res.body);
-    print(response);
+    // print(response);
     students.value = response['payload'];
-
-    print("subjectsss gettttingggggg");
+    students.value.reactive;
+    for (var st in students) {
+      uploaded[st['_id']] = false;
+    }
+    res = await http.get(Uri.parse(
+      "http://${localhost}/api/v1/marks/getmark/${tream.value}/${user.std}/${user.id}",
+    ));
+    // print(res.body);
+    response = jsonDecode(res.body);
+    print(response);
+    for (var st in response['payload']) {
+      if (st['tream'] == tream.value) {
+        uploaded[st['student']] = true;
+      }
+    }
+    uploaded.value.reactive;
     res = await http.get(
       Uri.parse("http://${localhost}/api/v1/subjects/list/1"),
     );
     response = jsonDecode(res.body);
-    print(response);
+    // print(response);
     if (response['payload'] != null) {
       subjects.value = response['payload']['subjects'];
     }
+    subjects.value.reactive;
     for (int i = 0; i < subjects.length; i++) {
       formcontroller.add(TextEditingController());
     }
+    refresh();
   }
 
   void upload(int index, GlobalKey<ScaffoldState> _scaffoldKey) async {
     try {
       List marks = [];
       for (int i = 0; i < subjects.length; i++) {
+        if (formcontroller[i].text.isEmpty) {
+          showtoast(_scaffoldKey, "please enter mark of ${subjects[i]}", true);
+          return;
+        }
         marks.add(formcontroller[i].text);
       }
       final res = await http
@@ -67,14 +86,18 @@ class Markcontroller extends GetxController {
       final response = jsonDecode(res.body);
       print(response['status']);
       if (response['status'] == 200) {
-        // showtoast(_scaffoldKey, "Marks uploaded!", false);
+        showtoast(_scaffoldKey, "Marks uploaded!", false);
       }
       if (response['status'] == 400) {
-        // showtoast(_scaffoldKey, "Alredy existed", true);
+        showtoast(_scaffoldKey, "Alredy existed", true);
       }
-      uploaded[index] = true;
+      uploaded[students[index]['_id']] = true;
+      for (int i = 0; i < subjects.length; i++) {
+        formcontroller[i].clear();
+      }
+      isupload.value = 0;
     } catch (e) {
-      // showtoast(_scaffoldKey, "Someting went wrong", true);
+      showtoast(_scaffoldKey, "Someting went wrong", true);
     }
   }
 }

@@ -109,8 +109,13 @@ class Markscreen extends StatelessWidget {
                 () => ListView.builder(
                   itemCount: markcontroller.students.length,
                   itemBuilder: (context, index) {
+                    // print(markcontroller.students[index]['trem'] ==
+                    //     markcontroller.tream.value);
                     return Obx(
-                      () => markcontroller.uploaded[index]
+                      () => markcontroller.uploaded.value[
+                                  markcontroller.students[index]['_id']] ||
+                              markcontroller.students[index]['trem'] !=
+                                  markcontroller.tream.value
                           ? Container()
                           : Container(
                               margin: EdgeInsets.symmetric(

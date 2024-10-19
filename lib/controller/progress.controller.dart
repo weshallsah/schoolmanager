@@ -14,7 +14,6 @@ class ProgressController extends GetxController {
   RxList students = [].obs;
   RxInt tream = 1.obs;
   RxList subject = [].obs;
-  // RxList marks = [].obs;
   RxInt isfeedback = 0.obs;
   RxList formfield = [].obs;
   RxBool isgenerate = true.obs;
@@ -39,20 +38,25 @@ class ProgressController extends GetxController {
     userModel = await AuthService.getuser();
     isadmin.value = userModel!.isadmin;
     final res = await http.get(Uri.parse(
-      "http://${localhost}/api/v1/student/marks/${userModel!.school}/${tream}/${1}",
+      "http://${localhost}/api/v1/student/marks/${userModel!.school}/${tream}/${userModel!.std}",
     ));
     print(res.body);
     final response = await jsonDecode(res.body);
-
+    if (res.statusCode != 200) {
+      return;
+    }
     if (response['payload'].length <= 0) {
       students.value = [];
       return;
     }
     students.value = response['payload'];
+    students.reactive;
     subject.value = jsonDecode(response['payload'][0]['result']['subject'][0]);
+    subject.reactive;
     for (int i = 0; i < subject.length; i++) {
       formfield.add(TextEditingController());
     }
+    refresh();
   }
 
   void Download(int idx) async {
@@ -92,10 +96,17 @@ class ProgressController extends GetxController {
       });
       print(res.body);
       final response = await jsonDecode(res.body);
-      // students.value = response['payload'];
+      // students[idx] = response['payload'];
+
       print(response);
       if (response['status'] == 200) {
+        students[idx]['result']['progress'] = true;
         showtoast(_globalKey, "progress generated successfully", false);
+        for (int i = 0; i < subject.length; i++) {
+          formfield.value.clear();
+        }
+        isfeedback.value = 0;
+        refresh();
       }
       if (response['status'] == 400) {
         showtoast(_globalKey, "Certificate alredy exist", false);

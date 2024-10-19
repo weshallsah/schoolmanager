@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:get/get.dart';
-import 'package:schoolmanager/controller/home.controller.dart';
-import 'package:schoolmanager/main.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/auth.dart';
-import 'package:schoolmanager/screen/home.dart';
 
 class AuthService {
   static Future<bool> islogin() async {
@@ -23,7 +20,7 @@ class AuthService {
     final user = await APICacheManager().getCacheData("Login");
     if (user.key.isNotEmpty) {
       final cachedata = await APICacheManager().getCacheData("Login");
-      return await UserModel.fromJson(jsonDecode(cachedata.syncData), false);
+      return UserModel.fromJson(jsonDecode(cachedata.syncData), false);
     }
   }
 
@@ -35,7 +32,7 @@ class AuthService {
         userModel,
       ),
     );
-    final res = await APICacheManager().addCacheData(cacheDBModel);
+    await APICacheManager().addCacheData(cacheDBModel);
   }
 }
 
@@ -51,6 +48,6 @@ class AttendanceService {
         true,
       ),
     );
-    final res = await APICacheManager().addCacheData(cacheDBModel);
+    await APICacheManager().addCacheData(cacheDBModel);
   }
 }
