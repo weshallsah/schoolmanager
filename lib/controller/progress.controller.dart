@@ -29,7 +29,16 @@ class ProgressController extends GetxController {
     'STD 6',
     'STD 7',
   ].obs;
+  var feeditem = [
+    "Very Poor",
+    "Poor",
+    "Good",
+    "Very Good",
+    "Excellent",
+    "Very Excellent",
+  ];
   RxString selecteditem = 'STD 1'.obs;
+  RxList selectedfeeditem = List.filled(6, "Good").obs;
   UserModel? userModel;
   @override
   void onInit() async {

@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: Size(393, 852),
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'schoolmanager',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

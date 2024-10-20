@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
@@ -103,10 +104,61 @@ class TeacherForm extends StatelessWidget {
             SizedBox(
               height: 15.h,
             ),
-            inputBox(
-              "Date of Birth",
-              recruitcontroller.DoB,
-              false,
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Date of Birth :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GetBuilder<Recruitcontroller>(
+                    builder: (controller) {
+                      return InkWell(
+                        onTap: () async {
+                          final date = (await showDatePicker(
+                            context: context,
+                            // currentDate: ,
+                            currentDate: DateTime.now(),
+                            firstDate: DateTime.utc(1900, 1, 1),
+                            lastDate: DateTime.now(),
+                            onDatePickerModeChange: (value) {
+                              print(value);
+                            },
+                          ));
+                          if (date != null) {
+                            // controller.isdate.value = !controller.isdate.value;
+                            controller.Dob.value = date;
+                            controller.reactive;
+                            controller.Dob.refresh();
+                          }
+                          print(date);
+                        },
+                        child: Obx(
+                          () => Container(
+                            // width: 60.w,
+                            margin: EdgeInsets.only(right: 20.w),
+                            alignment: Alignment.center,
+                            child: Text(
+                              DateFormat('yyyy-MM-dd')
+                                  .format(controller.Dob.value),
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 10.h,

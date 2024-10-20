@@ -40,12 +40,16 @@ class AttendanceController extends GetxController {
     user = await AuthService.getuser();
     isadmin.value = user!.isadmin;
     std.value = "std ${user!.std}";
-    String digit = "";
+    String digit = std.value;
+    if (isadmin.value) {
+      digit = selecteditem.value;
+    }
     for (int i = selecteditem.value.length - 1; i >= 0; i--) {
       if (selecteditem.value[i].toString().isNum) {
         digit = selecteditem.value[i] + digit;
       }
     }
+    print(digit);
     var res = await http.get(Uri.parse(
         "http://${localhost}/api/v1/student/list/${user!.school}/${digit}"));
     var response = jsonDecode(res.body);

@@ -34,26 +34,60 @@ class Authscreen extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Image.asset("./assets/school.png"),
               ),
-              SizedBox(
-                height: 50.h,
+              Obx(
+                () => SizedBox(
+                  height: authController.issignup.value ? 0.h : 50.h,
+                ),
               ),
+              GetBuilder<AuthController>(builder: (contrller) {
+                return Obx(
+                  () => contrller.issignup.value
+                      ? inputBox("School", contrller.school, false)
+                      : Container(),
+                );
+              }),
+              GetBuilder<AuthController>(builder: (contrller) {
+                return Obx(
+                  () => contrller.issignup.value
+                      ? inputBox("name", contrller.name, false)
+                      : Container(),
+                );
+              }),
               GetBuilder<AuthController>(builder: (contrller) {
                 return inputBox("Email", contrller.email, false);
               }),
-              SizedBox(
-                height: 20.h,
-              ),
               GetBuilder<AuthController>(builder: (contrller) {
                 return inputBox("password", contrller.password, true);
               }),
-              SizedBox(
-                height: 60.h,
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 5.h),
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    print(authController.issignup.value);
+                    authController.issignup.value =
+                        !authController.issignup.value;
+                    print(authController.issignup.value);
+                  },
+                  child: Obx(() => authController.issignup.value
+                      ? Text("Alredy have account Login")
+                      : Text("Register Principal")),
+                ),
+              ),
+              Obx(
+                () => SizedBox(
+                  height: authController.issignup.value ? 10.h : 50.h,
+                ),
               ),
               GetBuilder<AuthController>(builder: (contrller) {
                 return Obx(
                   () => InkWell(
                     onTap: () {
                       if (!contrller.isloading.value) {
+                        if (contrller.issignup.value) {
+                          contrller.signup(_globalKey);
+                          return;
+                        }
                         contrller.submit(_globalKey);
                       }
                     },
@@ -72,7 +106,7 @@ class Authscreen extends StatelessWidget {
                       child: contrller.isloading.value
                           ? CircularProgressIndicator()
                           : Text(
-                              "Login",
+                              contrller.issignup.value ? "Signup" : "Login",
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
@@ -81,7 +115,7 @@ class Authscreen extends StatelessWidget {
                     ),
                   ),
                 );
-              })
+              }),
             ],
           ),
         ),

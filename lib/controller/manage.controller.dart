@@ -36,19 +36,24 @@ class ManageController extends GetxController {
     }
     final res = await http
         .get(Uri.parse("http://${localhost}/api/v1/teacher/list/${school}"));
-    print(res);
+    // print(res);
     final response = jsonDecode(res.body);
-    print(response);
+    // print(response);
     list.value = response['payload'];
     for (var teacher in response['payload']) {
       // list.add(teacher);
       if (teacher['standard'] == -1) {
         // teacherstd['-1'] = false;
-        print("teacher has -1");
+        // print("teacher has -1");
         continue;
       }
-      print("teacher dont have -1");
+      // print("teacher dont have -1");
       teacherstd["${teacher['standard']}"] = true;
+    }
+    for (int i = 1; i < 8; i++) {
+      if (teacherstd["${i}"] == null) {
+        teacherstd["${i}"] = false;
+      }
     }
   }
 
@@ -56,7 +61,6 @@ class ManageController extends GetxController {
     bool ismy = false;
     try {
       String digit = "";
-      print(selecteditem[index]);
       for (int i = selecteditem[index].length - 1; i >= 0; i--) {
         // print(selecteditem[index][i]);
         if (selecteditem[index][i].toString().isNum) {
@@ -66,19 +70,22 @@ class ManageController extends GetxController {
           digit = selecteditem[index][i] + digit;
         }
       }
-      // print(digit);
-      // print(teacherstd[digit]);
-      if (teacherstd[digit]) {
+      print(teacherstd[digit]);
+      if (teacherstd[digit] != null && teacherstd[digit]) {
         ismy = true;
         throw "standard alredy have a teacher";
       }
+      print(list[index]['standard']);
+      // print(list[index]);
+      print("${teacherstd[list[index]['standard']]}");
+      teacherstd["${list[index]['standard']}"] = false;
       final res = await http.get(Uri.parse(
           "http://${localhost}/api/v1/teacher/standard/${list[index]['_id']}/${digit}"));
       final response = jsonDecode(res.body);
       print(response);
       if (response['status'] == 200) {
         showtoast(_gloabalkey, "standard updated", false);
-        onInit();
+        // onInit();
         return;
       } else {
         showtoast(_gloabalkey, "Something went wrong", true);

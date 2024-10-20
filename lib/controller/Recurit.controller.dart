@@ -20,15 +20,15 @@ class Recruitcontroller extends GetxController {
     "address"
   ].obs;
   var items = [
-    'STD 1',
-    'STD 2',
-    'STD 3',
-    'STD 4',
-    'STD 5',
-    'STD 6',
-    'STD 7',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
   ].obs;
-  RxString selecteditem = 'STD 1'.obs;
+  RxString selecteditem = '1'.obs;
   RxInt gender = 0.obs;
   RxString school = "".obs;
   RxInt isnewadmin = 0.obs;
@@ -37,8 +37,7 @@ class Recruitcontroller extends GetxController {
   var image;
   RxList formfiled = [].obs;
   TextEditingController standard = TextEditingController();
-  TextEditingController DoB = TextEditingController();
-
+  Rx<DateTime> Dob = DateTime.now().obs;
   @override
   void onInit() async {
     // TODO: implement onInit
@@ -87,7 +86,13 @@ class Recruitcontroller extends GetxController {
       }
       request.fields['password'] = formfiled[3].value.text;
       request.fields['mothername'] = formfiled[4].value.text;
-      request.fields['phone'] = formfiled[5].value.text;
+      String phone = formfiled[5].value.text;
+      if ((phone[0] != '9' && phone[0] != '7' && phone[0] != '8') ||
+          phone.length != 10) {
+        ismy = true;
+        throw "please enter valid phone number";
+      }
+      request.fields['phone'] = phone;
       if (!formfiled[6].text.toString().isEmail) {
         // print(formfiled[6].value.text);
         ismy = true;
@@ -95,8 +100,8 @@ class Recruitcontroller extends GetxController {
       }
       request.fields['email'] = formfiled[6].value.text;
       request.fields['address'] = formfiled[7].value.text;
-      request.fields['Standard'] = standard.text.isEmpty ? "" : standard.text;
-      request.fields['dob'] = DoB.text;
+      // request.fields['Standard'] = ;
+      request.fields['dob'] = jsonEncode(Dob.value.toString());
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = isnewadmin.value == 0 ? "true" : "false";
       request.fields['school'] = school.value;
@@ -132,10 +137,9 @@ class Recruitcontroller extends GetxController {
         formfiled[i].clear();
       }
       standard.clear();
-      DoB.clear();
+      Dob.value = DateTime.now();
       isadmission.value = false;
       isimage.value = false;
-      image = null;
     } catch (e) {
       print(e);
       showtoast(

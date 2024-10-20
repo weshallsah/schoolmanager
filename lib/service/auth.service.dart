@@ -25,7 +25,7 @@ class AuthService {
   }
 
   static Future setlogin(UserModel userModel) async {
-    // print("usermodel := ${userModel.toJson()}");
+    print("usermodel := ${userModel.toJson()}");
     APICacheDBModel cacheDBModel = APICacheDBModel(
       key: "Login",
       syncData: jsonEncode(

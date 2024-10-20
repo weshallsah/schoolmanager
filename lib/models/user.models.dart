@@ -28,7 +28,7 @@ class UserModel {
     email = json['email'];
     school = json['school'];
     isadmin = json['isadmin'];
-    photo = json['photo'];
+    photo = json['photo'] == null ? "" : json['photo'];
     std = json['standard'];
   }
   Map<String, dynamic> toJson() {

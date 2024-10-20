@@ -441,22 +441,56 @@ class Generate extends StatelessWidget {
                                                           EdgeInsets.symmetric(
                                                         vertical: 5.h,
                                                       ),
-                                                      child: TextField(
-                                                        controller:
-                                                            progresscontroller
-                                                                .formfield[idx],
-                                                        maxLength: 80,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border:
-                                                              OutlineInputBorder(),
-                                                          labelText: "Feedback",
-                                                          labelStyle: TextStyle(
-                                                            fontSize: 16.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Remark",
+                                                            style: TextStyle(
+                                                              fontSize: 16.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
                                                           ),
-                                                        ),
+                                                          DropdownButton(
+                                                            value: progresscontroller
+                                                                    .selectedfeeditem[
+                                                                index],
+                                                            items: progresscontroller
+                                                                .feeditem
+                                                                .map<
+                                                                    DropdownMenuItem>(
+                                                              (element) {
+                                                                // print(element);
+                                                                return DropdownMenuItem(
+                                                                  child: Text(
+                                                                    element,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                  value:
+                                                                      element,
+                                                                );
+                                                              },
+                                                            ).toList(),
+                                                            onChanged: (it) {
+                                                              progresscontroller
+                                                                          .selectedfeeditem[
+                                                                      index] =
+                                                                  it.toString();
+                                                              // controller.onInit();
+                                                            },
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
@@ -524,7 +558,7 @@ class droplist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(controller.items);
+    // print(controller.items);
     return Obx(
       () => DropdownButton(
         value: type == 0
@@ -536,7 +570,7 @@ class droplist extends StatelessWidget {
                     : controller.selectedcaste.value,
         items: listitems.map<DropdownMenuItem>(
           (element) {
-            print(element);
+            // print(element);
             return DropdownMenuItem(
               child: Text(
                 element,

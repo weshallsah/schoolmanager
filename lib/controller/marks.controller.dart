@@ -29,7 +29,7 @@ class Markcontroller extends GetxController {
     var res = await http.get(Uri.parse(
       "http://${localhost}/api/v1/student/list/${school}/${user.std}",
     ));
-    // print(res.body);
+    print(res.body);
     var response = jsonDecode(res.body);
     // print(response);
     students.value = response['payload'];

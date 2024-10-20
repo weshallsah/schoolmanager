@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/constant.dart';
@@ -26,28 +27,30 @@ class Admissioncontroller extends GetxController {
     "serial",
   ].obs;
   var items = [
-    'STD 1',
-    'STD 2',
-    'STD 3',
-    'STD 4',
-    'STD 5',
-    'STD 6',
-    'STD 7',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
   ].obs;
   // var Nationality = [];
   var Religion = ['Hindu', 'Muslim', 'Christian'];
   var caste = ['SC', 'ST', 'OBC', 'General'];
-  RxString selecteditem = 'STD 1'.obs;
+  RxString selecteditem = '1'.obs;
   RxString selectedcaste = 'General'.obs;
   RxString selectednationality = 'Indian'.obs;
   RxString selectedreligion = 'Hindu'.obs;
   RxInt gender = 0.obs;
   RxString school = "".obs;
+  RxBool isdate = false.obs;
   RxBool isstudent = true.obs;
   RxBool isimage = false.obs;
+  RxBool isset = false.obs;
   var image;
   Rx<TextEditingController> standard = TextEditingController().obs;
-  Rx<TextEditingController> Dob = TextEditingController().obs;
+  Rx<DateTime> Dob = DateTime.now().obs;
   RxList formfiled = List.filled(16, TextEditingController()).obs;
 
   @override
@@ -56,6 +59,7 @@ class Admissioncontroller extends GetxController {
     UserModel userModel = await AuthService.getuser();
     print(studenttitle.length);
     school.value = userModel.school;
+    Dob.value = DateTime.now();
   }
 
   void pickimage() async {
@@ -75,16 +79,30 @@ class Admissioncontroller extends GetxController {
   }
 
   void uploadstudent(GlobalKey<ScaffoldState> _scaffoldKey) async {
+    bool ismy = false;
     try {
       var request = await http.MultipartRequest(
         'Post',
         Uri.parse("http://${localhost}/api/v1/student/admission"),
       );
+      for (int i = 0; i < studenttitle.length; i++) {
+        if (formfiled[i].value.text.isEmpty) {
+          ismy = true;
+          throw "please fill all the fields";
+        }
+      }
       request.fields['name'] = formfiled[0].value.text;
       request.fields['fathername'] = formfiled[1].value.text;
       request.fields['mothername'] = formfiled[2].value.text;
       request.fields['enroll'] = formfiled[3].value.text;
-      request.fields['phone'] = formfiled[4].value.text;
+      String phone = formfiled[4].value.text;
+      print(phone.length);
+      if ((phone[0] != '9' && phone[0] != '7' && phone[0] != '8') ||
+          phone.length != 10) {
+        ismy = true;
+        throw "please enter valid phone number";
+      }
+      request.fields['phone'] = phone;
       request.fields['mothertoungue'] = formfiled[5].value.text;
       request.fields['placeofbrith'] = formfiled[6].value.text;
       request.fields['aadhar'] = formfiled[7].value.text;
@@ -92,15 +110,15 @@ class Admissioncontroller extends GetxController {
       for (int i = 9; i < studenttitle.length; i++) {
         request.fields[studenttitle[i]] = formfiled[i].value.text;
       }
-      request.fields['GRNo'] = "";
-      request.fields['nationality'] = "";
-      request.fields['religion'] = "";
-      request.fields['caste'] = "";
-      request.fields['dob'] = Dob.value.text;
+      request.fields['nationality'] = selectednationality.value;
+      request.fields['religion'] = selectedreligion.value;
+      request.fields['caste'] = selectedcaste.value;
+      request.fields['dob'] = jsonEncode(Dob.value.toString());
       request.fields['Standard'] = standard.value.text;
       request.fields['gender'] = gender.value.toString();
       request.fields['school'] = school.value;
-      if (image.path == null) {
+      if (image == null) {
+        ismy = true;
         throw "please upload image of student";
       }
       if (image?.path != null) {
@@ -129,10 +147,15 @@ class Admissioncontroller extends GetxController {
       for (int i = 0; i < 16; i++) {
         formfiled[i].clear();
       }
+      isimage.value = false;
       standard.value.clear();
-      Dob.value.clear();
+      Dob.value = DateTime.now();
+      // Dob.value.clear();
     } catch (e) {
-      showtoast(_scaffoldKey, "somthing went wrong", true);
+      print(ismy);
+      print(e);
+      showtoast(
+          _scaffoldKey, ismy ? e.toString() : "somthing went wrong", true);
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
@@ -65,19 +66,20 @@ class StudentForm extends StatelessWidget {
                   itemCount: admissioncontroller.studenttitle.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    print(admissioncontroller.studenttitle.length);
-                    admissioncontroller.formfiled[index] =
-                        TextEditingController();
-                    print(
-                        index == 4 || index == 8 || index == 12 || index == 13);
+                    if (!admissioncontroller.isset.value) {
+                      admissioncontroller.formfiled[index] =
+                          TextEditingController();
+                    }
+                    if (index == admissioncontroller.studenttitle.length - 1) {
+                      admissioncontroller.isset.value = true;
+                    }
+                    // print(
+                    //     index == 4 || index == 8 || index == 12 || index == 13);
                     return inputBox(
                       admissioncontroller.studenttitle[index],
                       admissioncontroller.formfiled[index],
                       false,
-                      isnumber: index == 4 ||
-                          index == 8 ||
-                          index == 12 ||
-                          index == 13,
+                      isnumber: index == 4 || index == 9,
                     );
                   },
                 ),
@@ -211,11 +213,61 @@ class StudentForm extends StatelessWidget {
             SizedBox(
               height: 15.h,
             ),
-            inputBox(
-              "Date of Birth",
-              admissioncontroller.Dob.value,
-              false,
-              isdate: true,
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Date of Birth :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GetBuilder<Admissioncontroller>(
+                    builder: (controller) {
+                      return InkWell(
+                        onTap: () async {
+                          final date = (await showDatePicker(
+                            context: context,
+                            // currentDate: ,
+                            currentDate: DateTime.now(),
+                            firstDate: DateTime.utc(1900, 1, 1),
+                            lastDate: DateTime.now(),
+                            onDatePickerModeChange: (value) {
+                              print(value);
+                            },
+                          ));
+                          if (date != null) {
+                            // controller.isdate.value = !controller.isdate.value;
+                            controller.Dob.value = date;
+                            admissioncontroller.reactive;
+                            controller.Dob.refresh();
+                          }
+                          print(date);
+                        },
+                        child: Obx(
+                          () => Container(
+                            // width: 60.w,
+                            margin: EdgeInsets.only(right: 20.w),
+                            alignment: Alignment.center,
+                            child: Text(
+                              DateFormat('yyyy-MM-dd')
+                                  .format(controller.Dob.value),
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20.h,
