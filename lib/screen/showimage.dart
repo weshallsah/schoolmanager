@@ -24,14 +24,25 @@ class Certificate extends StatelessWidget {
                   height: double.infinity,
                   width: double.infinity,
                   alignment: Alignment.topCenter,
-                  child: Container(
-                    child: Image.file(
-                      type == 0
-                          ? progressController.progress
-                          : leavingController.Lc,
-                      // height: 800,
-                    ),
-                  ),
+                  child: type == 1
+                      ? GetBuilder<LeavingController>(builder: (controller) {
+                          return Container(
+                            child: Image.file(
+                              leavingController.Lc,
+                              // height: 800,
+                            ),
+                          );
+                        })
+                      : GetBuilder<ProgressController>(
+                          builder: (controller) {
+                            return Container(
+                              child: Image.file(
+                                progressController.progress,
+                                // height: 800,
+                              ),
+                            );
+                          },
+                        ),
                 )
               : Center(
                   child: CircularProgressIndicator(),

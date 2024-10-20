@@ -105,180 +105,186 @@ class Markscreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: markcontroller.students.length,
-                  itemBuilder: (context, index) {
-                    // print(markcontroller.students[index]['trem'] ==
-                    //     markcontroller.tream.value);
-                    return Obx(
-                      () => markcontroller.uploaded.value[
-                                  markcontroller.students[index]['_id']] ||
-                              markcontroller.students[index]['trem'] !=
-                                  markcontroller.tream.value
-                          ? Container()
-                          : Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 10.h,
-                              ),
-                              height: markcontroller.isupload.value == index + 1
-                                  ? 600.h
-                                  : null,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(),
+              child: GetBuilder<Markcontroller>(builder: (controller) {
+                return Obx(
+                  () => ListView.builder(
+                    itemCount: markcontroller.students.length,
+                    itemBuilder: (context, index) {
+                      // print(markcontroller.students[index]['trem'] ==
+                      //     markcontroller.tream.value);
+                      return Obx(
+                        () => markcontroller.uploaded.value[
+                                    markcontroller.students[index]['_id']] ||
+                                markcontroller.students[index]['trem'] !=
+                                    markcontroller.tream.value
+                            ? Container()
+                            : Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 10.h,
+                                ),
+                                height:
+                                    markcontroller.isupload.value == index + 1
+                                        ? 600.h
+                                        : null,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(),
+                                  ),
+                                ),
+                                // color: Colors.amber,
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        markcontroller.students[index]['name'],
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        markcontroller.students[index]
+                                            ['enroll'],
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      trailing: InkWell(
+                                        onTap: () {
+                                          if (markcontroller.isupload.value ==
+                                              index + 1) {
+                                            markcontroller.isupload.value = 0;
+                                            return;
+                                          }
+                                          markcontroller.isupload.value =
+                                              index + 1;
+                                        },
+                                        child: Container(
+                                          height: 55.h,
+                                          width: 120.w,
+                                          decoration: BoxDecoration(
+                                            // color: Colors.redAccent,
+                                            border: Border.all(),
+                                            borderRadius: BorderRadius.circular(
+                                              15.r,
+                                            ),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Upload Marks",
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Obx(
+                                      () => markcontroller.isupload.value ==
+                                              index + 1
+                                          ? Expanded(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 25.w,
+                                                      vertical: 5.h,
+                                                    ),
+                                                    // width: double.infinity,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Subjects",
+                                                          style: TextStyle(
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Marks",
+                                                          style: TextStyle(
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 420.h,
+                                                    // color: Colors.amber,
+                                                    child: ListView.builder(
+                                                      itemCount: markcontroller
+                                                          .subjects.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Subjects(
+                                                          markcontroller
+                                                              .subjects[index],
+                                                          markcontroller
+                                                                  .formcontroller[
+                                                              index],
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15.h,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      markcontroller.upload(
+                                                          index, _scaffoldKey);
+                                                    },
+                                                    child: Container(
+                                                      height: 56.h,
+                                                      width: 200.w,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.amber,
+                                                        border: Border.all(
+                                                            color: Colors.black,
+                                                            style: BorderStyle
+                                                                .solid,
+                                                            width: 1.w),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(9.r),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "update",
+                                                        style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // Subjects(markcontroller),
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              // color: Colors.amber,
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    title: Text(
-                                      markcontroller.students[index]['name'],
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      markcontroller.students[index]['enroll'],
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    trailing: InkWell(
-                                      onTap: () {
-                                        if (markcontroller.isupload.value ==
-                                            index + 1) {
-                                          markcontroller.isupload.value = 0;
-                                          return;
-                                        }
-                                        markcontroller.isupload.value =
-                                            index + 1;
-                                      },
-                                      child: Container(
-                                        height: 55.h,
-                                        width: 120.w,
-                                        decoration: BoxDecoration(
-                                          // color: Colors.redAccent,
-                                          border: Border.all(),
-                                          borderRadius: BorderRadius.circular(
-                                            15.r,
-                                          ),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Upload Marks",
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Obx(
-                                    () => markcontroller.isupload.value ==
-                                            index + 1
-                                        ? Expanded(
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                    horizontal: 25.w,
-                                                    vertical: 5.h,
-                                                  ),
-                                                  // width: double.infinity,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Subjects",
-                                                        style: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "Marks",
-                                                        style: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 420.h,
-                                                  // color: Colors.amber,
-                                                  child: ListView.builder(
-                                                    itemCount: markcontroller
-                                                        .subjects.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return Subjects(
-                                                        markcontroller
-                                                            .subjects[index],
-                                                        markcontroller
-                                                                .formcontroller[
-                                                            index],
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15.h,
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    markcontroller.upload(
-                                                        index, _scaffoldKey);
-                                                  },
-                                                  child: Container(
-                                                    height: 56.h,
-                                                    width: 200.w,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.amber,
-                                                      border: Border.all(
-                                                          color: Colors.black,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 1.w),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              9.r),
-                                                    ),
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      "update",
-                                                      style: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                // Subjects(markcontroller),
-                                              ],
-                                            ),
-                                          )
-                                        : Container(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    );
-                  },
-                ),
-              ),
+                      );
+                    },
+                  ),
+                );
+              }),
             ),
           ],
         ),

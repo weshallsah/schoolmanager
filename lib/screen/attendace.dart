@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:horizontal_week_calendar/horizontal_week_calendar.dart';
 import 'package:schoolmanager/controller/attendance.controller.dart';
 import 'package:schoolmanager/main.dart';
+import 'package:schoolmanager/screen/progress.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Attendancescreen extends StatelessWidget {
@@ -31,6 +32,7 @@ class Attendancescreen extends StatelessWidget {
                     attendanceController.selecteddate.value =
                         ((p0.year * 100) + p0.month) * 100 + p0.day;
                     await attendanceController.getpresent();
+                    // attendanceController.onInit();
                   },
                 ),
                 Container(
@@ -56,53 +58,34 @@ class Attendancescreen extends StatelessWidget {
                           SizedBox(
                             width: 5.w,
                           ),
-                          Obx(() {
-                            if (attendanceController.isadmin.value) {
-                              return Container(
-                                alignment: Alignment.center,
-                                child: DropdownButton(
-                                  value:
-                                      attendanceController.selecteditem.value,
-                                  items: attendanceController.items.map(
-                                    (element) {
-                                      return DropdownMenuItem(
-                                        child: Text(
-                                          element,
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        value: element,
-                                      );
-                                    },
-                                  ).toList(),
-                                  onChanged: (it) {
-                                    attendanceController.selecteditem.value =
-                                        it.toString();
-                                    attendanceController.onInit();
-                                  },
-                                ),
-                              );
-                            }
-                            return Obx(
-                              () => Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  attendanceController.std.value,
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
+                          GetBuilder<AttendanceController>(
+                              builder: (controller) {
+                            return Obx(() {
+                              if (attendanceController.isadmin.value) {
+                                return Container(
+                                  alignment: Alignment.center,
+                                  child: droplist(
+                                      controller, false, controller.items),
+                                );
+                              }
+                              return Obx(
+                                () => Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    attendanceController.std.value,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            });
                           })
                         ],
                       ),
                       Obx(() {
                         if (!attendanceController.isadmin.value &&
-                            !attendanceController.istaken.value &&
                             attendanceController.selecteddate.value ==
                                 attendanceController.today.value) {
                           return InkWell(
@@ -135,17 +118,14 @@ class Attendancescreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Obx(() {
-                  if (!attendanceController.isadmin.value &&
-                      !attendanceController.istaken.value &&
-                      attendanceController.selecteddate.value ==
-                          attendanceController.today.value &&
-                      attendanceController.cnt !=
-                          attendanceController.student.length) {
-                    return Container(
-                      height: 500.h,
-                      width: double.infinity,
-                      child: ListView.builder(
+                GetBuilder<AttendanceController>(builder: (controller) {
+                  return Obx(() {
+                    if (!attendanceController.isadmin.value &&
+                        attendanceController.selecteddate.value ==
+                            attendanceController.today.value) {
+                      return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
                         itemCount: attendanceController.student.length,
                         itemBuilder: (context, index) {
                           return Obx(
@@ -213,10 +193,10 @@ class Attendancescreen extends StatelessWidget {
                             },
                           );
                         },
-                      ),
-                    );
-                  }
-                  return Container();
+                      );
+                    }
+                    return Container();
+                  });
                 }),
                 InkWell(
                   onTap: () {
@@ -260,22 +240,16 @@ class Attendancescreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                Obx(
-                  () {
-                    if (attendanceController.present.value) {
-                      return Container(
-                        height: 500.h,
-                        width: double.infinity,
-                        child: Obx(
+                GetBuilder<AttendanceController>(builder: (controller) {
+                  return Obx(
+                    () {
+                      if (attendanceController.present.value) {
+                        return Obx(
                           () => ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
                             itemCount: attendanceController.student.length,
                             itemBuilder: (context, index) {
-                              // if (attendanceController.presentlist.length <
-                              //     index + 1) {
-                              //   attendanceController.presentlist.value
-                              //       .add(null);
-                              // }
-                              // attendanceController.presentcnt.value++;
                               return Obx(
                                 () => !attendanceController.presentlist[
                                         attendanceController.student[index]
@@ -330,12 +304,12 @@ class Attendancescreen extends StatelessWidget {
                               );
                             },
                           ),
-                        ),
-                      );
-                    }
-                    return Container();
-                  },
-                ),
+                        );
+                      }
+                      return Container();
+                    },
+                  );
+                }),
                 InkWell(
                   onTap: () {
                     attendanceController.Absent.value =
@@ -378,13 +352,13 @@ class Attendancescreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                Obx(
-                  () {
-                    if (attendanceController.Absent.value) {
-                      return Container(
-                        height: 500.h,
-                        width: double.infinity,
-                        child: ListView.builder(
+                GetBuilder<AttendanceController>(builder: (controller) {
+                  return Obx(
+                    () {
+                      if (attendanceController.Absent.value) {
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: attendanceController.student.length,
                           itemBuilder: (context, index) {
                             return Obx(
@@ -439,12 +413,12 @@ class Attendancescreen extends StatelessWidget {
                                     ),
                             );
                           },
-                        ),
-                      );
-                    }
-                    return Container();
-                  },
-                )
+                        );
+                      }
+                      return Container();
+                    },
+                  );
+                })
               ],
             ),
           ),

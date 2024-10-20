@@ -9,6 +9,7 @@ import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
+import 'package:schoolmanager/screen/progress.dart';
 
 class TeacherForm extends StatelessWidget {
   TeacherForm({super.key});
@@ -81,25 +82,17 @@ class TeacherForm extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Container(
-                    width: 60.w,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      controller: recruitcontroller.standard,
-                      decoration: InputDecoration(
-                          labelText: "STD",
-                          labelStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          )),
-                    ),
-                  )
+                  GetBuilder<Recruitcontroller>(builder: (controller) {
+                    return Container(
+                      child: droplist(controller, true, controller.items),
+                    );
+                  })
                 ],
               ),
             ),
-            // SizedBox(
-            //   height: 15.h,
-            // ),
+            SizedBox(
+              height: 10.h,
+            ),
             genderBox("Admin", Admissioncontroller(), recruitcontroller,
                 ["Yes", "No"], false),
             SizedBox(

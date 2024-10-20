@@ -36,6 +36,7 @@ class LeavingController extends GetxController {
 
   void getLeavingcertificate(GlobalKey<ScaffoldState> _formkey) async {
     try {
+      Lc = null;
       isloading.value = true;
       UserModel userModel = await AuthService.getuser();
       final res = await http.post(

@@ -9,6 +9,8 @@ import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
+import 'package:schoolmanager/screen/progress.dart';
+import 'package:schoolmanager/utils/constant.dart';
 
 class StudentForm extends StatelessWidget {
   StudentForm({super.key});
@@ -94,20 +96,110 @@ class StudentForm extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Container(
-                    width: 60.w,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      controller: admissioncontroller.standard.value,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          labelText: "STD",
-                          labelStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          )),
+                  GetBuilder<Admissioncontroller>(builder: (controller) {
+                    return Container(
+                      // width: 60.w,
+                      margin: EdgeInsets.only(right: 20.w),
+                      alignment: Alignment.center,
+                      child: droplist(controller, true, controller.items),
+                    );
+                  })
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Nationality :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
                     ),
-                  )
+                  ),
+                  GetBuilder<Admissioncontroller>(builder: (controller) {
+                    return Container(
+                      // width: 60.w,
+                      margin: EdgeInsets.only(right: 20.w),
+                      alignment: Alignment.center,
+                      child: droplist(
+                        controller,
+                        true,
+                        countries,
+                        type: 1,
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Religion :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GetBuilder<Admissioncontroller>(builder: (controller) {
+                    return Container(
+                      // width: 60.w,
+                      margin: EdgeInsets.only(right: 20.w),
+                      alignment: Alignment.center,
+                      child: droplist(
+                        controller,
+                        true,
+                        controller.Religion,
+                        type: 2,
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Caste :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GetBuilder<Admissioncontroller>(builder: (controller) {
+                    return Container(
+                      // width: 60.w,
+                      margin: EdgeInsets.only(right: 20.w),
+                      alignment: Alignment.center,
+                      child: droplist(
+                        controller,
+                        true,
+                        controller.caste,
+                        type: 3,
+                      ),
+                    );
+                  })
                 ],
               ),
             ),

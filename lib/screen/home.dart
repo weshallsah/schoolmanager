@@ -56,13 +56,18 @@ class Homescreen extends StatelessWidget {
                 SizedBox(
                   height: 25.h,
                 ),
-                GetBuilder<HomeController>(builder: (controller) {
-                  return Obx(
-                    () => controller.isadmin.value
-                        ? principal(homeController)
-                        : Teacher(homeController),
-                  );
-                })
+                GetBuilder<HomeController>(
+                    init: HomeController(),
+                    initState: (state) {
+                      homeController.onInit();
+                    },
+                    builder: (controller) {
+                      return Obx(
+                        () => controller.isadmin.value
+                            ? principal(homeController)
+                            : Teacher(homeController),
+                      );
+                    })
               ],
             ),
           ),
@@ -509,66 +514,61 @@ class genderBox extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
-            flex: 1,
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          Flexible(
-            flex: 2,
-            child: Container(
-              alignment: Alignment.centerRight,
-              child: ListView.builder(
-                itemCount: list.length,
-                scrollDirection: Axis.horizontal,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      if (isgender) {
-                        admissioncontroller.gender.value = index;
-                        recruitcontroller.gender.value = index;
-                        return;
-                      }
-                      recruitcontroller.isnewadmin.value = index;
-                    },
-                    child: Obx(
-                      () => Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
+          Container(
+            alignment: Alignment.centerRight,
+            child: ListView.builder(
+              itemCount: list.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    if (isgender) {
+                      admissioncontroller.gender.value = index;
+                      recruitcontroller.gender.value = index;
+                      return;
+                    }
+                    recruitcontroller.isnewadmin.value = index;
+                  },
+                  child: Obx(
+                    () => Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: index == list.length - 1
+                              ? BorderSide(color: Colors.transparent)
+                              : BorderSide(),
                         ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            right: index == list.length - 1
-                                ? BorderSide(color: Colors.transparent)
-                                : BorderSide(),
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          list[index],
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isgender
-                                ? admissioncontroller.gender.value == index
-                                    ? Colors.redAccent
-                                    : null
-                                : recruitcontroller.isnewadmin.value == index
-                                    ? Colors.red
-                                    : null,
-                          ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        list[index],
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isgender
+                              ? admissioncontroller.gender.value == index
+                                  ? Colors.redAccent
+                                  : null
+                              : recruitcontroller.isnewadmin.value == index
+                                  ? Colors.red
+                                  : null,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ],

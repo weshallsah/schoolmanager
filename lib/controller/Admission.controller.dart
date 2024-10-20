@@ -19,16 +19,28 @@ class Admissioncontroller extends GetxController {
     "Mother Name",
     "Enroll",
     "Phone",
-    "Nationality",
     "Mother Toungue",
     "Place of Birth",
     "Aadhar number",
     "Address",
-    "religion",
-    "caste",
     "serial",
-    "GRNo",
   ].obs;
+  var items = [
+    'STD 1',
+    'STD 2',
+    'STD 3',
+    'STD 4',
+    'STD 5',
+    'STD 6',
+    'STD 7',
+  ].obs;
+  // var Nationality = [];
+  var Religion = ['Hindu', 'Muslim', 'Christian'];
+  var caste = ['SC', 'ST', 'OBC', 'General'];
+  RxString selecteditem = 'STD 1'.obs;
+  RxString selectedcaste = 'General'.obs;
+  RxString selectednationality = 'Indian'.obs;
+  RxString selectedreligion = 'Hindu'.obs;
   RxInt gender = 0.obs;
   RxString school = "".obs;
   RxBool isstudent = true.obs;
@@ -73,19 +85,24 @@ class Admissioncontroller extends GetxController {
       request.fields['mothername'] = formfiled[2].value.text;
       request.fields['enroll'] = formfiled[3].value.text;
       request.fields['phone'] = formfiled[4].value.text;
-      request.fields['nationality'] = formfiled[5].value.text;
-      request.fields['mothertoungue'] = formfiled[6].value.text;
-      request.fields['placeofbrith'] = formfiled[7].value.text;
-      request.fields['aadhar'] = formfiled[8].value.text;
-      request.fields['address'] = formfiled[9].value.text;
-      for (int i = 10; i < studenttitle.length; i++) {
+      request.fields['mothertoungue'] = formfiled[5].value.text;
+      request.fields['placeofbrith'] = formfiled[6].value.text;
+      request.fields['aadhar'] = formfiled[7].value.text;
+      request.fields['address'] = formfiled[8].value.text;
+      for (int i = 9; i < studenttitle.length; i++) {
         request.fields[studenttitle[i]] = formfiled[i].value.text;
       }
+      request.fields['GRNo'] = "";
+      request.fields['nationality'] = "";
+      request.fields['religion'] = "";
+      request.fields['caste'] = "";
       request.fields['dob'] = Dob.value.text;
       request.fields['Standard'] = standard.value.text;
       request.fields['gender'] = gender.value.toString();
       request.fields['school'] = school.value;
-      print(image?.path);
+      if (image.path == null) {
+        throw "please upload image of student";
+      }
       if (image?.path != null) {
         http.MultipartFile file = await http.MultipartFile.fromPath(
           'avatar',

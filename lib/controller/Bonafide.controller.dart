@@ -16,6 +16,8 @@ class BonafideController extends GetxController {
   void generate(GlobalKey<ScaffoldState> _key) async {
     try {
       isloading.value = true;
+      bonafide = null;
+      isloaded.value=false;
       if (enroll.text.isEmpty) {
         showtoast(_key, "enter enrollment number", false);
         return;

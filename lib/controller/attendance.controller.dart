@@ -41,21 +41,18 @@ class AttendanceController extends GetxController {
     isadmin.value = user!.isadmin;
     std.value = "std ${user!.std}";
     String digit = "";
-    // print(selecteditem);
     for (int i = selecteditem.value.length - 1; i >= 0; i--) {
-      // print(selecteditem[index][i]);
       if (selecteditem.value[i].toString().isNum) {
         digit = selecteditem.value[i] + digit;
       }
     }
-    final res = await http.get(Uri.parse(
+    var res = await http.get(Uri.parse(
         "http://${localhost}/api/v1/student/list/${user!.school}/${digit}"));
-    final response = jsonDecode(res.body);
+    var response = jsonDecode(res.body);
     print(response);
     if (response['payload'].length > 0) {
       student.value = response['payload'];
       for (var st in student) {
-        print(st['_id']);
         presentlist.value[st['_id']] = false;
       }
     } else {
@@ -63,6 +60,7 @@ class AttendanceController extends GetxController {
     }
     selecteddate.value =
         ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
+    // res = await http.get(Uri.parse("http://${localhost}/api/v1/Marks/check/${user!.school}/${dateTime}/"));
     today.value = ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
     istaken.value = await AttendanceService.istaken(today);
     await getpresent();
@@ -70,38 +68,41 @@ class AttendanceController extends GetxController {
 
   Future getpresent() async {
     try {
-      String digit = "";
-      // print(selecteditem);
-      for (int i = selecteditem.value.length - 1; i >= 0; i--) {
-        // print(selecteditem[index][i]);
-        if (selecteditem.value[i].toString().isNum) {
-          digit = selecteditem.value[i] + digit;
+      String digit = user!.std.toString();
+      presentcnt.value = 0;
+      for (var st in student) {
+        presentlist.value[st['_id']] = false;
+      }
+      // print(digit);
+      if (isadmin.value) {
+        digit = "";
+        for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+          if (selecteditem.value[i].toString().isNum) {
+            digit = selecteditem.value[i] + digit;
+          }
         }
       }
+      print(selecteddate);
       final res = await await http.get(
         Uri.parse(
           "http://${localhost}/api/v1/attendance/list/${selecteddate.toString()}/${user!.school}/${digit}",
         ),
       );
       final Response = jsonDecode(res.body);
-      // print(Response["payload"]);
       if (res.statusCode != 200) {
         throw 'something went wrong';
       }
       if (Response['payload'] == null) {
-        presentcnt.value = 0;
         return;
       }
-      // if (Response['payload']['present'] != null) {
-      //   presentlist.value = Response['payload']['present'];
-      // }
       for (var element in Response['payload']['present']) {
         if (element != null) {
-          print(element);
+          // print(element);
           presentlist.value[element] = true;
           presentcnt.value++;
         }
       }
+      presentlist.values.reactive;
       refresh();
     } catch (e) {
       print(e);

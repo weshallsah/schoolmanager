@@ -37,11 +37,26 @@ class ProgressController extends GetxController {
     super.onInit();
     userModel = await AuthService.getuser();
     isadmin.value = userModel!.isadmin;
+    // selecteditem.value = 'STD userModel!.std.toString()';
+    // selecteditem.value =userModel.std;
+    String digit = "${userModel!.std}";
+    if (isadmin.value) {
+      // print(selecteditem);
+      digit = "";
+      for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+        // print(selecteditem[index][i]);
+        if (selecteditem.value[i].toString().isNum) {
+          digit = selecteditem.value[i] + digit;
+        }
+      }
+    }
+    print(digit);
     final res = await http.get(Uri.parse(
-      "http://${localhost}/api/v1/student/marks/${userModel!.school}/${tream}/${userModel!.std}",
+      "http://${localhost}/api/v1/student/marks/${userModel!.school}/${tream}/${digit}",
     ));
-    print(res.body);
+    // print(res.body);
     final response = await jsonDecode(res.body);
+    print("${digit} := ${response}");
     if (res.statusCode != 200) {
       return;
     }
@@ -70,12 +85,19 @@ class ProgressController extends GetxController {
       print(res.body);
       final response = res.body;
       print(response);
-      final tempDir = "/storage/emulated/0/Download/";
-      File file =
+      final tempDir = "/storage/emulated/0/Download";
+      bool isexist =
           await File('${tempDir}/progress${students[idx]['enroll']}.png')
-              .create();
-      file.writeAsBytesSync(response.codeUnits);
+              .exists();
+      File file;
+      if (!isexist) {
+        file = await File('${tempDir}/progress${students[idx]['enroll']}.png')
+            .create();
+      } else {
+        file = File('${tempDir}/progress${students[idx]['enroll']}.png');
+      }
       print(file.path);
+      file.writeAsBytesSync(response.codeUnits);
       progress = File(file.path);
       isloading.value = false;
     } catch (e) {

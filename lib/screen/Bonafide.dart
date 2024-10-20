@@ -44,7 +44,7 @@ class Bonafide extends StatelessWidget {
                   child: bonafideController.isloading.value
                       ? CircularProgressIndicator()
                       : Text(
-                          "Login",
+                          "Generate bonafide",
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
@@ -56,36 +56,38 @@ class Bonafide extends StatelessWidget {
             SizedBox(
               height: 20.h,
             ),
-            Expanded(
-              child: Obx(() => bonafideController.isloaded.value
-                  ? Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(),
+            GetBuilder<BonafideController>(builder: (controller) {
+              return Expanded(
+                child: Obx(() => bonafideController.isloaded.value
+                    ? Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(),
+                          ),
                         ),
-                      ),
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        child: Image.file(bonafideController.bonafide
-                            // height: 800,
-                            ),
-                      ),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(),
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          child: Image.file(bonafideController.bonafide
+                              // height: 800,
+                              ),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Bonafide is not generated yet",
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(),
+                          ),
                         ),
-                      ),
-                    )),
-            ),
+                        child: Center(
+                          child: Text(
+                            "Bonafide is not generated yet",
+                          ),
+                        ),
+                      )),
+              );
+            }),
           ],
         ),
       ),

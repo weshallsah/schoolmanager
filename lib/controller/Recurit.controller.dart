@@ -19,6 +19,16 @@ class Recruitcontroller extends GetxController {
     "email",
     "address"
   ].obs;
+  var items = [
+    'STD 1',
+    'STD 2',
+    'STD 3',
+    'STD 4',
+    'STD 5',
+    'STD 6',
+    'STD 7',
+  ].obs;
+  RxString selecteditem = 'STD 1'.obs;
   RxInt gender = 0.obs;
   RxString school = "".obs;
   RxInt isnewadmin = 0.obs;
@@ -85,7 +95,7 @@ class Recruitcontroller extends GetxController {
       }
       request.fields['email'] = formfiled[6].value.text;
       request.fields['address'] = formfiled[7].value.text;
-      request.fields['Standard'] = standard.text.isEmpty ? "":standard.text;
+      request.fields['Standard'] = standard.text.isEmpty ? "" : standard.text;
       request.fields['dob'] = DoB.text;
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = isnewadmin.value == 0 ? "true" : "false";
@@ -130,7 +140,7 @@ class Recruitcontroller extends GetxController {
       print(e);
       showtoast(
           _scaffoldKey, ismy ? e.toString() : "something went wrong", true);
-          // ismy=f
+      // ismy=f
     }
   }
 }
