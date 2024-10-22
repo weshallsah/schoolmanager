@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
+import 'package:schoolmanager/controller/auth.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
@@ -66,7 +67,8 @@ class TeacherForm extends StatelessWidget {
                   recruitcontroller.formfiled.value
                       .add(TextEditingController());
                   return inputBox(recruitcontroller.teachertitle[index],
-                      recruitcontroller.formfiled[index], false);
+                      recruitcontroller.formfiled[index], false,
+                      isnumber: index == 5);
                 },
               ),
             ),
@@ -95,12 +97,12 @@ class TeacherForm extends StatelessWidget {
               height: 10.h,
             ),
             genderBox("Admin", Admissioncontroller(), recruitcontroller,
-                ["Yes", "No"], false),
+                AuthController(), ["Yes", "No"], false),
             SizedBox(
               height: 15.h,
             ),
             genderBox("Gender", Admissioncontroller(), recruitcontroller,
-                ["Male", "Female", "Other"], true),
+                AuthController(), ["Male", "Female", "Other"], true),
             SizedBox(
               height: 15.h,
             ),

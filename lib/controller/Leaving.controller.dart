@@ -35,6 +35,7 @@ class LeavingController extends GetxController {
   }
 
   void getLeavingcertificate(GlobalKey<ScaffoldState> _formkey) async {
+    bool ismy = false;
     try {
       Lc = null;
       isloading.value = true;
@@ -53,10 +54,15 @@ class LeavingController extends GetxController {
           "Remarks": Formfild[7].text
         },
       );
-      // print(res.statusCode);
+      if (res.statusCode == 404) {
+        ismy = true;
+        throw "No student found with this enroll";
+      }
+      print(res.statusCode);
       if (res.statusCode != 200) {
         throw "server went wrong";
       }
+
       final response = res.body;
       print(response.codeUnits);
       var status = await Permission.storage.status;
@@ -76,7 +82,8 @@ class LeavingController extends GetxController {
       }
     } catch (e) {
       print("Error := ${e}");
-      showtoast(_formkey, "Someting went wrong", true);
+      showtoast(_formkey, ismy ? e.toString() : "Someting went wrong", true);
+      Get.back();
     }
   }
 }

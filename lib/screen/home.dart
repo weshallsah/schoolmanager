@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
+import 'package:schoolmanager/controller/auth.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/Admission.dart';
 import 'package:schoolmanager/screen/Recrute.dart';
@@ -500,10 +501,11 @@ class genderBox extends StatelessWidget {
   String text;
   Admissioncontroller admissioncontroller;
   Recruitcontroller recruitcontroller;
+  AuthController authController;
   List list;
   bool isgender;
   genderBox(this.text, this.admissioncontroller, this.recruitcontroller,
-      this.list, this.isgender,
+      this.authController, this.list, this.isgender,
       {super.key});
 
   @override
@@ -534,6 +536,7 @@ class genderBox extends StatelessWidget {
                     if (isgender) {
                       admissioncontroller.gender.value = index;
                       recruitcontroller.gender.value = index;
+                      authController.gender.value = index;
                       return;
                     }
                     recruitcontroller.isnewadmin.value = index;

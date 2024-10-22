@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
+import 'package:schoolmanager/controller/auth.controller.dart';
 import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
@@ -209,7 +210,7 @@ class StudentForm extends StatelessWidget {
               height: 10.h,
             ),
             genderBox("Gender", admissioncontroller, Recruitcontroller(),
-                ["Male", "Female", "Other"], true),
+                AuthController(), ["Male", "Female", "Other"], true),
             SizedBox(
               height: 15.h,
             ),

@@ -19,17 +19,23 @@ class UserModel {
   late final int std;
 
   UserModel.fromJson(Map<String, dynamic> json, bool isDB) {
+    print(json);
     enroll = json['enroll'];
-    // print(json['_id']);
+    print(json['_id']);
     id = isDB ? json['_id'] : json['id'];
     // print(json['username']);
 
     name = json['name'];
+    print(json['name']);
     email = json['email'];
+    print(json['email']);
     school = json['school'];
+    print(json['school']);
     isadmin = json['isadmin'];
+    print(json['isadmin']);
     photo = json['photo'] == null ? "" : json['photo'];
     std = json['standard'];
+    print(json['standard']);
   }
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};

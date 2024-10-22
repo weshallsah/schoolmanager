@@ -40,13 +40,17 @@ class AttendanceController extends GetxController {
     user = await AuthService.getuser();
     isadmin.value = user!.isadmin;
     std.value = "std ${user!.std}";
-    String digit = std.value;
+    String digit = user!.std.toString();
     if (isadmin.value) {
-      digit = selecteditem.value;
+      print(selecteditem.value);
+      digit = "";
     }
-    for (int i = selecteditem.value.length - 1; i >= 0; i--) {
-      if (selecteditem.value[i].toString().isNum) {
-        digit = selecteditem.value[i] + digit;
+    print(digit);
+    if (isadmin.value) {
+      for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+        if (selecteditem.value[i].toString().isNum) {
+          digit = selecteditem.value[i] + digit;
+        }
       }
     }
     print(digit);

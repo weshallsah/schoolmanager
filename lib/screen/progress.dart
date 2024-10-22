@@ -399,7 +399,10 @@ class Generate extends StatelessWidget {
                                                 .subject.length,
                                             itemBuilder: (context, idx) {
                                               print(progresscontroller
-                                                  .subject[idx]);
+                                                  .selectedfeeditem[index]);
+                                              progresscontroller
+                                                      .selectedfeeditem[index] =
+                                                  "Good";
                                               return Container(
                                                 margin: EdgeInsets.symmetric(
                                                   horizontal: 25.w,
@@ -455,41 +458,50 @@ class Generate extends StatelessWidget {
                                                                       .w600,
                                                             ),
                                                           ),
-                                                          DropdownButton(
-                                                            value: progresscontroller
-                                                                    .selectedfeeditem[
-                                                                index],
-                                                            items: progresscontroller
-                                                                .feeditem
-                                                                .map<
-                                                                    DropdownMenuItem>(
-                                                              (element) {
-                                                                // print(element);
-                                                                return DropdownMenuItem(
-                                                                  child: Text(
-                                                                    element,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          16.sp,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                  value:
-                                                                      element,
-                                                                );
-                                                              },
-                                                            ).toList(),
-                                                            onChanged: (it) {
-                                                              progresscontroller
-                                                                          .selectedfeeditem[
-                                                                      index] =
-                                                                  it.toString();
-                                                              // controller.onInit();
-                                                            },
-                                                          ),
+                                                          GetBuilder<
+                                                                  ProgressController>(
+                                                              builder:
+                                                                  (controller) {
+                                                            return Obx(
+                                                              () =>
+                                                                  DropdownButton(
+                                                                value: controller
+                                                                        .selectedfeeditem[
+                                                                    idx],
+                                                                items: progresscontroller
+                                                                    .feeditem
+                                                                    .map<
+                                                                        DropdownMenuItem>(
+                                                                  (element) {
+                                                                    // print(element);
+                                                                    return DropdownMenuItem(
+                                                                      child:
+                                                                          Text(
+                                                                        element,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              16.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                      value:
+                                                                          element,
+                                                                    );
+                                                                  },
+                                                                ).toList(),
+                                                                onChanged:
+                                                                    (it) {
+                                                                  progresscontroller
+                                                                              .selectedfeeditem[
+                                                                          idx] =
+                                                                      it.toString();
+                                                                  // controller.onInit();
+                                                                },
+                                                              ),
+                                                            );
+                                                          }),
                                                         ],
                                                       ),
                                                     ),
@@ -584,7 +596,15 @@ class droplist extends StatelessWidget {
           },
         ).toList() as List<DropdownMenuItem>,
         onChanged: (it) {
-          controller.selecteditem.value = it.toString();
+          if (type == 0) {
+            controller.selecteditem.value = it.toString();
+          } else if (type == 1) {
+            controller.selectednationality.value = it.toString();
+          } else if (type == 2) {
+            controller.selectedreligion.value = it.toString();
+          } else {
+            controller.selectedcaste.value = it.toString();
+          }
           // controller.onInit();
           if (!isadmission) {
             controller.onInit();

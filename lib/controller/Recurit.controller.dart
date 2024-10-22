@@ -11,7 +11,7 @@ import 'package:schoolmanager/utils/snakbar.dart';
 class Recruitcontroller extends GetxController {
   RxList teachertitle = [
     "name",
-    "enroll",
+    "teacher id",
     "fathername",
     "password",
     "mothername",
@@ -76,7 +76,7 @@ class Recruitcontroller extends GetxController {
       request.fields['name'] = formfiled[0].value.text;
       if (formfiled[1].value.text.isEmpty) {
         ismy = true;
-        throw "please give enrollment number";
+        throw "please give teacher id";
       }
       request.fields['enroll'] = formfiled[1].value.text;
       request.fields['fathername'] = formfiled[2].value.text;
@@ -105,8 +105,7 @@ class Recruitcontroller extends GetxController {
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = isnewadmin.value == 0 ? "true" : "false";
       request.fields['school'] = school.value;
-      print(image?.path);
-      if (image?.path != null) {
+      if (image != null) {
         http.MultipartFile file = await http.MultipartFile.fromPath(
           'avatar',
           image!.path,

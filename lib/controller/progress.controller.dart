@@ -38,7 +38,7 @@ class ProgressController extends GetxController {
     "Very Excellent",
   ];
   RxString selecteditem = 'STD 1'.obs;
-  RxList selectedfeeditem = List.filled(6, "Good").obs;
+  RxList selectedfeeditem = [].obs;
   UserModel? userModel;
   @override
   void onInit() async {
@@ -53,7 +53,6 @@ class ProgressController extends GetxController {
       // print(selecteditem);
       digit = "";
       for (int i = selecteditem.value.length - 1; i >= 0; i--) {
-        // print(selecteditem[index][i]);
         if (selecteditem.value[i].toString().isNum) {
           digit = selecteditem.value[i] + digit;
         }
@@ -76,6 +75,9 @@ class ProgressController extends GetxController {
     students.value = response['payload'];
     students.reactive;
     subject.value = jsonDecode(response['payload'][0]['result']['subject'][0]);
+    for (int i = 0; i < subject.length; i++) {
+      selectedfeeditem.value.add("Good");
+    }
     subject.reactive;
     for (int i = 0; i < subject.length; i++) {
       formfield.add(TextEditingController());
@@ -118,7 +120,7 @@ class ProgressController extends GetxController {
     try {
       List feedbacks = [];
       for (int i = 0; i < subject.length; i++) {
-        feedbacks.add(formfield[i].text);
+        feedbacks.add(selectedfeeditem[i]);
       }
       final res = await http
           .post(Uri.parse("http://${localhost}/api/v1/marks/generate"), body: {
