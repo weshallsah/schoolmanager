@@ -10,58 +10,64 @@ import 'package:schoolmanager/utils/snakbar.dart';
 
 class Markcontroller extends GetxController {
   RxInt isupload = 0.obs;
-  RxList subjects = [].obs;
+  RxList subjects = ["English", "Hindi", "Marathi", "Science", "Maths"].obs;
   RxList students = [].obs;
   RxMap uploaded = {}.obs;
+  RxMap fail = {}.obs;
   List formcontroller = [];
   String school = "";
   String id = "";
   RxInt tream = 1.obs;
+  RxBool Regular = true.obs;
 
   @override
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
 
-    UserModel user = await AuthService.getuser();
-    school = user.school;
-    id = user.id;
-    var res = await http.get(Uri.parse(
-      "http://${localhost}/api/v1/student/list/${school}/${user.std}",
-    ));
-    print(res.body);
-    var response = jsonDecode(res.body);
-    // print(response);
-    students.value = response['payload'];
-    students.value.reactive;
-    for (var st in students) {
-      uploaded[st['_id']] = false;
-    }
-    res = await http.get(Uri.parse(
-      "http://${localhost}/api/v1/marks/getmark/${tream.value}/${user.std}/${user.id}",
-    ));
-    // print(res.body);
-    response = jsonDecode(res.body);
-    print(response);
-    for (var st in response['payload']) {
-      if (st['tream'] == tream.value) {
-        uploaded[st['student']] = true;
+    try {
+      UserModel user = await AuthService.getuser();
+      school = user.school;
+      id = user.id;
+      var res = await http.get(Uri.parse(
+        "http://${localhost}/api/v1/student/list/${school}/${user.std}",
+      ));
+      // print(res.body);
+      var response = jsonDecode(res.body);
+      // print(response);
+      students.value = response['payload'];
+      students.value.reactive;
+      for (var st in students) {
+        uploaded[st['_id']] = false;
+        fail[st['_id']] = false;
       }
+      res = await http.get(Uri.parse(
+        "http://${localhost}/api/v1/marks/getmark/${tream.value}/${user.std}/${user.id}",
+      ));
+      // print(res.body);
+      response = jsonDecode(res.body);
+      // print(response);
+      for (var st in response['payload']) {
+        if (st['tream'] == tream.value) {
+          double mark = 0;
+          uploaded[st['student']] = true;
+          for (var m in st['marks']) {
+            mark += m;
+          }
+          mark = ((mark / (st['marks'].length * 100)) * 100);
+          print(mark);
+          fail[st['student']] = mark < 35;
+        }
+      }
+      uploaded.value.reactive;
+      subjects.value.reactive;
+      for (int i = 0; i < subjects.length; i++) {
+        formcontroller.add(TextEditingController());
+      }
+      refresh();
+    } catch (e) {
+      print(e);
     }
-    uploaded.value.reactive;
-    res = await http.get(
-      Uri.parse("http://${localhost}/api/v1/subjects/list/1"),
-    );
-    response = jsonDecode(res.body);
-    // print(response);
-    if (response['payload'] != null) {
-      subjects.value = response['payload']['subjects'];
-    }
-    subjects.value.reactive;
-    for (int i = 0; i < subjects.length; i++) {
-      formcontroller.add(TextEditingController());
-    }
-    refresh();
   }
 
   void upload(int index, GlobalKey<ScaffoldState> _scaffoldKey) async {
@@ -92,6 +98,7 @@ class Markcontroller extends GetxController {
         showtoast(_scaffoldKey, "Alredy existed", true);
       }
       uploaded[students[index]['_id']] = true;
+      fail[students[index]['_id']] = false;
       for (int i = 0; i < subjects.length; i++) {
         formcontroller[i].clear();
       }

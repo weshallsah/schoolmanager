@@ -28,32 +28,36 @@ class ManageController extends GetxController {
   @override
   void onInit() async {
     // TODO: implement onInit
-    super.onInit();
-    UserModel userModel = await AuthService.getuser();
-    school = userModel.school;
-    if (school == "") {
-      return;
-    }
-    final res = await http
-        .get(Uri.parse("http://${localhost}/api/v1/teacher/list/${school}"));
-    // print(res);
-    final response = jsonDecode(res.body);
-    // print(response);
-    list.value = response['payload'];
-    for (var teacher in response['payload']) {
-      // list.add(teacher);
-      if (teacher['standard'] == -1) {
-        // teacherstd['-1'] = false;
-        // print("teacher has -1");
-        continue;
+    try {
+      super.onInit();
+      UserModel userModel = await AuthService.getuser();
+      school = userModel.school;
+      if (school == "") {
+        return;
       }
-      // print("teacher dont have -1");
-      teacherstd["${teacher['standard']}"] = true;
-    }
-    for (int i = 1; i < 8; i++) {
-      if (teacherstd["${i}"] == null) {
-        teacherstd["${i}"] = false;
+      final res = await http
+          .get(Uri.parse("http://${localhost}/api/v1/teacher/list/${school}"));
+      // print(res);
+      final response = jsonDecode(res.body);
+      // print(response);
+      list.value = response['payload'];
+      for (var teacher in response['payload']) {
+        // list.add(teacher);
+        if (teacher['standard'] == -1) {
+          // teacherstd['-1'] = false;
+          // print("teacher has -1");
+          continue;
+        }
+        // print("teacher dont have -1");
+        teacherstd["${teacher['standard']}"] = true;
       }
+      for (int i = 1; i < 8; i++) {
+        if (teacherstd["${i}"] == null) {
+          teacherstd["${i}"] = false;
+        }
+      }
+    } catch (e) {
+      print("error := e");
     }
   }
 
@@ -85,7 +89,7 @@ class ManageController extends GetxController {
       print(response);
       if (response['status'] == 200) {
         showtoast(_gloabalkey, "standard updated", false);
-        // onInit();
+        onInit();
         return;
       } else {
         showtoast(_gloabalkey, "Something went wrong", true);

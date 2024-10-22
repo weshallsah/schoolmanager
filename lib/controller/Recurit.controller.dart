@@ -104,6 +104,8 @@ class Recruitcontroller extends GetxController {
       request.fields['dob'] = jsonEncode(Dob.value.toString());
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = isnewadmin.value == 0 ? "true" : "false";
+      print(selecteditem.value);
+      request.fields['standard'] = selecteditem.value;
       request.fields['school'] = school.value;
       if (image != null) {
         http.MultipartFile file = await http.MultipartFile.fromPath(

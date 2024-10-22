@@ -24,7 +24,7 @@ class Manage extends StatelessWidget {
             itemBuilder: (context, index) {
               manageController.selecteditem
                   .add("STD ${manageController.list[index]['standard']}");
-              // print(manageController.list[index]['standard']);
+              print(manageController.list[index]['standard']);
               return Container(
                 margin: EdgeInsets.symmetric(
                   horizontal: 20.w,

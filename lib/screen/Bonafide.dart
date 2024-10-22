@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -68,10 +70,13 @@ class Bonafide extends StatelessWidget {
                           ),
                         ),
                         alignment: Alignment.topCenter,
-                        child: Container(
-                          child: Image.file(bonafideController.bonafide
-                              // height: 800,
-                              ),
+                        child: Obx(
+                          () => bonafideController.bonafide.value != ""
+                              ? Container(
+                                  child: Image.file(
+                                      File(controller.bonafide.value)),
+                                )
+                              : Container(),
                         ),
                       )
                     : Container(

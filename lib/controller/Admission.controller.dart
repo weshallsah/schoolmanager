@@ -96,7 +96,7 @@ class Admissioncontroller extends GetxController {
       request.fields['mothername'] = formfiled[2].value.text;
       request.fields['enroll'] = formfiled[3].value.text;
       String phone = formfiled[4].value.text;
-      print(phone.length);
+      // print(phone.length);
       if ((phone[0] != '9' && phone[0] != '7' && phone[0] != '8') ||
           phone.length != 10) {
         ismy = true;
@@ -114,7 +114,8 @@ class Admissioncontroller extends GetxController {
       request.fields['religion'] = selectedreligion.value;
       request.fields['caste'] = selectedcaste.value;
       request.fields['dob'] = jsonEncode(Dob.value.toString());
-      request.fields['Standard'] = standard.value.text;
+      print(selecteditem.value);
+      request.fields['standard'] = selecteditem.value;
       request.fields['gender'] = gender.value.toString();
       request.fields['school'] = school.value;
       if (image == null) {

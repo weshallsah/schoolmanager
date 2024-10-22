@@ -91,6 +91,13 @@ class AuthController extends GetxController {
         ismy = true;
         throw "please enter email";
       }
+      String phone = forminput[9].value.text;
+      if ((phone[0] != '9' && phone[0] != '7' && phone[0] != '8') ||
+          phone.length != 10) {
+
+        ismy = true;
+        throw "please enter valid phone number";
+      }
       isnext.value = true;
     } catch (e) {
       print(e);

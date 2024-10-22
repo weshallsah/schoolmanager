@@ -12,12 +12,12 @@ class BonafideController extends GetxController {
   TextEditingController enroll = TextEditingController();
   RxBool isloaded = false.obs;
   RxBool isloading = false.obs;
-  var bonafide;
+  RxString bonafide = "".obs;
   void generate(GlobalKey<ScaffoldState> _key) async {
     try {
       isloading.value = true;
-      bonafide = null;
-      isloaded.value=false;
+      isloaded.value = false;
+      bonafide.value = "";
       if (enroll.text.isEmpty) {
         showtoast(_key, "enter enrollment number", false);
         return;
@@ -36,10 +36,11 @@ class BonafideController extends GetxController {
       File file = await File('${tempDir}/bonafide${enroll.text}.png').create();
       file.writeAsBytesSync(response.codeUnits);
       print(file.path);
-      bonafide = File(file.path);
-      if (bonafide != null) {
+      bonafide.value = file.path;
+      if (bonafide.value != "") {
         isloaded.value = true;
       }
+      isloaded.reactive;
       isloading.value = false;
     } catch (e) {
       print("Error := ${e}");

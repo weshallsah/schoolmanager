@@ -37,41 +37,46 @@ class AttendanceController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    user = await AuthService.getuser();
-    isadmin.value = user!.isadmin;
-    std.value = "std ${user!.std}";
-    String digit = user!.std.toString();
-    if (isadmin.value) {
-      print(selecteditem.value);
-      digit = "";
-    }
-    print(digit);
-    if (isadmin.value) {
-      for (int i = selecteditem.value.length - 1; i >= 0; i--) {
-        if (selecteditem.value[i].toString().isNum) {
-          digit = selecteditem.value[i] + digit;
+    try {
+      user = await AuthService.getuser();
+      isadmin.value = user!.isadmin;
+      std.value = "std ${user!.std}";
+      String digit = user!.std.toString();
+      if (isadmin.value) {
+        print(selecteditem.value);
+        digit = "";
+      }
+      print(digit);
+      if (isadmin.value) {
+        for (int i = selecteditem.value.length - 1; i >= 0; i--) {
+          if (selecteditem.value[i].toString().isNum) {
+            digit = selecteditem.value[i] + digit;
+          }
         }
       }
-    }
-    print(digit);
-    var res = await http.get(Uri.parse(
-        "http://${localhost}/api/v1/student/list/${user!.school}/${digit}"));
-    var response = jsonDecode(res.body);
-    print(response);
-    if (response['payload'].length > 0) {
-      student.value = response['payload'];
-      for (var st in student) {
-        presentlist.value[st['_id']] = false;
+      print(digit);
+      var res = await http.get(Uri.parse(
+          "http://${localhost}/api/v1/student/list/${user!.school}/${digit}"));
+      var response = jsonDecode(res.body);
+      print(response);
+      if (response['payload'].length > 0) {
+        student.value = response['payload'];
+        for (var st in student) {
+          presentlist.value[st['_id']] = false;
+        }
+      } else {
+        student.value = [];
       }
-    } else {
-      student.value = [];
+      selecteddate.value =
+          ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
+      // res = await http.get(Uri.parse("http://${localhost}/api/v1/Marks/check/${user!.school}/${dateTime}/"));
+      today.value =
+          ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
+      istaken.value = await AttendanceService.istaken(today);
+      await getpresent();
+    } catch (e) {
+      print("Error := ${e}");
     }
-    selecteddate.value =
-        ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
-    // res = await http.get(Uri.parse("http://${localhost}/api/v1/Marks/check/${user!.school}/${dateTime}/"));
-    today.value = ((dateTime.year * 100) + dateTime.month) * 100 + dateTime.day;
-    istaken.value = await AttendanceService.istaken(today);
-    await getpresent();
   }
 
   Future getpresent() async {
