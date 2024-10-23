@@ -41,7 +41,7 @@ class TeacherForm extends StatelessWidget {
                     borderRadius: BorderRadius.circular(60.w),
                     image: DecorationImage(
                       image: recruitcontroller.isimage.value
-                          ? FileImage(recruitcontroller.image as File)
+                          ? FileImage(File(recruitcontroller.image.value) as File)
                           : AssetImage(
                               './assets/user.png',
                             ),

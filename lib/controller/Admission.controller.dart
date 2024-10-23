@@ -43,12 +43,14 @@ class Admissioncontroller extends GetxController {
   RxString selectednationality = 'Indian'.obs;
   RxString selectedreligion = 'Hindu'.obs;
   RxInt gender = 0.obs;
+  var devision = ['A', 'B', 'C', 'D'];
+  RxString selectedDivision = 'A'.obs;
   RxString school = "".obs;
   RxBool isdate = false.obs;
   RxBool isstudent = true.obs;
   RxBool isimage = false.obs;
   RxBool isset = false.obs;
-  var image;
+  RxString image = "".obs;
   Rx<TextEditingController> standard = TextEditingController().obs;
   Rx<DateTime> Dob = DateTime.now().obs;
   RxList formfiled = List.filled(16, TextEditingController()).obs;
@@ -68,7 +70,7 @@ class Admissioncontroller extends GetxController {
       final XFile? file =
           await imagePicker.pickImage(source: ImageSource.gallery);
       if (file != null) {
-        image = File(file.path);
+        image.value = file.path;
         isimage.value = true;
       }
       print(isimage);
@@ -118,14 +120,15 @@ class Admissioncontroller extends GetxController {
       request.fields['standard'] = selecteditem.value;
       request.fields['gender'] = gender.value.toString();
       request.fields['school'] = school.value;
-      if (image == null) {
+      request.fields['division'] = selectedDivision.value;
+      if (image == "") {
         ismy = true;
         throw "please upload image of student";
       }
-      if (image?.path != null) {
+      if (image != "") {
         http.MultipartFile file = await http.MultipartFile.fromPath(
           'avatar',
-          image!.path,
+          image.value,
         );
         request.files.add(file);
       }

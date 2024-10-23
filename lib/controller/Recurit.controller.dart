@@ -34,7 +34,7 @@ class Recruitcontroller extends GetxController {
   RxInt isnewadmin = 0.obs;
   RxBool isimage = false.obs;
   RxBool isadmission = false.obs;
-  var image;
+  RxString image = "".obs;
   RxList formfiled = [].obs;
   TextEditingController standard = TextEditingController();
   Rx<DateTime> Dob = DateTime.now().obs;
@@ -52,7 +52,7 @@ class Recruitcontroller extends GetxController {
       final XFile? file =
           await imagePicker.pickImage(source: ImageSource.gallery);
       if (file != null) {
-        image = File(file.path);
+        image.value = file.path;
         isimage.value = true;
       }
       print(isimage);
@@ -107,10 +107,10 @@ class Recruitcontroller extends GetxController {
       print(selecteditem.value);
       request.fields['standard'] = selecteditem.value;
       request.fields['school'] = school.value;
-      if (image != null) {
+      if (image != "") {
         http.MultipartFile file = await http.MultipartFile.fromPath(
           'avatar',
-          image!.path,
+          image.value,
         );
         request.files.add(file);
       }

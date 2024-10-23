@@ -43,11 +43,12 @@ class StudentForm extends StatelessWidget {
                     borderRadius: BorderRadius.circular(60.w),
                     image: DecorationImage(
                       image: admissioncontroller.isimage.value
-                          ? FileImage(admissioncontroller.image as File)
+                          ? FileImage(
+                              File(admissioncontroller.image.value) as File)
                           : AssetImage(
                               './assets/user.png',
                             ),
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
@@ -174,6 +175,35 @@ class StudentForm extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              width: 305.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Division :",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GetBuilder<Admissioncontroller>(builder: (controller) {
+                    return Container(
+                      // width: 60.w,
+                      margin: EdgeInsets.only(right: 20.w),
+                      alignment: Alignment.center,
+                      child: droplist(
+                        controller,
+                        true,
+                        controller.devision,
+                        type: 3,
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
             SizedBox(
               height: 10.h,
             ),
@@ -199,7 +229,7 @@ class StudentForm extends StatelessWidget {
                         controller,
                         true,
                         controller.caste,
-                        type: 3,
+                        type: 4,
                       ),
                     );
                   })

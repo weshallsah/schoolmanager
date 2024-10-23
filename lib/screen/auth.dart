@@ -191,11 +191,13 @@ class Principal extends StatelessWidget {
                 borderRadius: BorderRadius.circular(60.w),
                 image: DecorationImage(
                   image: authController.isimage.value
-                      ? FileImage(authController.image as File)
+                      ? FileImage(
+                          File(authController.image.value) as File,
+                        )
                       : AssetImage(
                           './assets/user.png',
                         ),
-                  fit: BoxFit.contain,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),

@@ -571,6 +571,7 @@ class droplist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print(controller.items);
+    print(controller.selectedDivision.value);
     return Obx(
       () => DropdownButton(
         value: type == 0
@@ -579,7 +580,9 @@ class droplist extends StatelessWidget {
                 ? controller.selectednationality.value
                 : type == 2
                     ? controller.selectedreligion.value
-                    : controller.selectedcaste.value,
+                    : type == 3
+                        ? controller.selectedDivision.value
+                        : controller.selectedcaste.value,
         items: listitems.map<DropdownMenuItem>(
           (element) {
             // print(element);
@@ -602,6 +605,8 @@ class droplist extends StatelessWidget {
             controller.selectednationality.value = it.toString();
           } else if (type == 2) {
             controller.selectedreligion.value = it.toString();
+          } else if (type == 3) {
+            controller.selectedDivision.value = it.toString();
           } else {
             controller.selectedcaste.value = it.toString();
           }

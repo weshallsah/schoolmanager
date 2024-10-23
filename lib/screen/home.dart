@@ -394,6 +394,7 @@ class Greet extends StatelessWidget {
                     image: NetworkImage(
                       "http://${localhost}/api/v1/teacher/viewphoto/${homeController.photo}",
                     ),
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),

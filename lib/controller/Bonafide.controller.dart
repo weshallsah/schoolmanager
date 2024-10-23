@@ -13,7 +13,7 @@ class BonafideController extends GetxController {
   RxBool isloaded = false.obs;
   RxBool isloading = false.obs;
   RxString bonafide = "".obs;
-  void generate(GlobalKey<ScaffoldState> _key) async {
+  Future generate(GlobalKey<ScaffoldState> _key) async {
     try {
       isloading.value = true;
       isloaded.value = false;
@@ -33,9 +33,13 @@ class BonafideController extends GetxController {
       final response = res.body;
       print(response);
       final tempDir = "/storage/emulated/0/Download";
+      final date = DateTime.now();
       File file = await File('${tempDir}/bonafide${enroll.text}.png').create();
       file.writeAsBytesSync(response.codeUnits);
+      imageCache.clear();
+      imageCache.clearLiveImages();
       print(file.path);
+      await Future.delayed(Duration(milliseconds: 200));
       bonafide.value = file.path;
       if (bonafide.value != "") {
         isloaded.value = true;

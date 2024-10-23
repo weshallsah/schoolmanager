@@ -24,7 +24,7 @@ class LeavingController extends GetxController {
   ];
   RxBool isloading = false.obs;
   RxList Formfild = [].obs;
-  var Lc;
+  RxString Lc = "".obs;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -37,7 +37,7 @@ class LeavingController extends GetxController {
   void getLeavingcertificate(GlobalKey<ScaffoldState> _formkey) async {
     bool ismy = false;
     try {
-      Lc = null;
+      Lc.value = "";
       isloading.value = true;
       UserModel userModel = await AuthService.getuser();
       final res = await http.post(
@@ -73,8 +73,10 @@ class LeavingController extends GetxController {
       final tempDir = "/storage/emulated/0/Download";
       File file = await File('${tempDir}/${Formfild[0].text}LC.png').create();
       // print(file);
+      imageCache.clear();
+      imageCache.clearLiveImages();
       file.writeAsBytesSync(response.codeUnits);
-      Lc = File(file.path);
+      Lc.value = file.path;
       showtoast(_formkey, "Lc generated", false);
       isloading.value = false;
       for (int i = 0; i < Formfild.length; i++) {

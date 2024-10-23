@@ -6,10 +6,18 @@ import 'package:get/get.dart';
 import 'package:schoolmanager/controller/Bonafide.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 
-class Bonafide extends StatelessWidget {
+class Bonafide extends StatefulWidget {
   Bonafide({super.key});
+
+  @override
+  State<Bonafide> createState() => _BonafideState();
+}
+
+class _BonafideState extends State<Bonafide> {
   BonafideController bonafideController = Get.put(BonafideController());
+
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +36,9 @@ class Bonafide extends StatelessWidget {
             ),
             Obx(
               () => InkWell(
-                onTap: () {
-                  bonafideController.generate(_globalKey);
+                onTap: () async {
+                  await bonafideController.generate(_globalKey);
+                  setState(() {});
                 },
                 child: Container(
                   height: 56.h,
@@ -74,7 +83,8 @@ class Bonafide extends StatelessWidget {
                           () => bonafideController.bonafide.value != ""
                               ? Container(
                                   child: Image.file(
-                                      File(controller.bonafide.value)),
+                                    File(controller.bonafide.value) as File,
+                                  ),
                                 )
                               : Container(),
                         ),

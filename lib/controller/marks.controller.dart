@@ -46,7 +46,7 @@ class Markcontroller extends GetxController {
       ));
       // print(res.body);
       response = jsonDecode(res.body);
-      // print(response);
+      print(response);
       for (var st in response['payload']) {
         if (st['tream'] == tream.value) {
           double mark = 0;
@@ -72,6 +72,9 @@ class Markcontroller extends GetxController {
 
   void upload(int index, GlobalKey<ScaffoldState> _scaffoldKey) async {
     try {
+      UserModel user = await AuthService.getuser();
+      school = user.school;
+      id = user.id;
       List marks = [];
       for (int i = 0; i < subjects.length; i++) {
         if (formcontroller[i].text.isEmpty) {
@@ -85,7 +88,7 @@ class Markcontroller extends GetxController {
         "student": students[index]['_id'],
         "teacher": id,
         "tream": tream.value.toString(),
-        "standard": "1",
+        "standard": "${user.std}",
         "subject": jsonEncode(subjects),
         "marks": jsonEncode(marks),
       });
@@ -104,6 +107,7 @@ class Markcontroller extends GetxController {
       }
       isupload.value = 0;
     } catch (e) {
+      print(e);
       showtoast(_scaffoldKey, "Someting went wrong", true);
     }
   }

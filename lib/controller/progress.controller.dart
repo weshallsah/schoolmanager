@@ -18,7 +18,7 @@ class ProgressController extends GetxController {
   RxList formfield = [].obs;
   RxBool isgenerate = true.obs;
   RxBool isadmin = false.obs;
-  var progress;
+  RxString progress = "".obs;
   RxBool isloading = false.obs;
   var items = [
     'STD 1',
@@ -108,8 +108,10 @@ class ProgressController extends GetxController {
         file = File('${tempDir}/progress${students[idx]['enroll']}.png');
       }
       print(file.path);
+      imageCache.clear();
+      imageCache.clearLiveImages();
       file.writeAsBytesSync(response.codeUnits);
-      progress = File(file.path);
+      progress.value = file.path;
       isloading.value = false;
     } catch (e) {
       print("Error := ${e}");

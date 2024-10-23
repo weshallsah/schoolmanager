@@ -54,7 +54,7 @@ class AuthController extends GetxController {
   RxBool issignup = false.obs;
   Rx<DateTime> establish = DateTime.now().obs;
   RxBool isimage = false.obs;
-  var image;
+  RxString image = "".obs;
   RxBool isnext = false.obs;
 
   void pickimage() async {
@@ -63,9 +63,10 @@ class AuthController extends GetxController {
       final XFile? file =
           await imagePicker.pickImage(source: ImageSource.gallery);
       if (file != null) {
-        image = File(file.path);
+        image.value = file.path;
         isimage.value = true;
       }
+
       print(isimage);
       print(image);
     } catch (e) {
@@ -94,7 +95,6 @@ class AuthController extends GetxController {
       String phone = forminput[9].value.text;
       if ((phone[0] != '9' && phone[0] != '7' && phone[0] != '8') ||
           phone.length != 10) {
-
         ismy = true;
         throw "please enter valid phone number";
       }
@@ -222,10 +222,10 @@ class AuthController extends GetxController {
       request.fields['dob'] = jsonEncode(Dob.value.toString());
       request.fields['gender'] = gender.value.toString();
       request.fields['isadmin'] = "true";
-      if (image?.path != null) {
+      if (image != "") {
         http.MultipartFile file = await http.MultipartFile.fromPath(
           'avatar',
-          image!.path,
+          image.value,
         );
         request.files.add(file);
       }

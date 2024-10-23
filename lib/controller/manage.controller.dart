@@ -89,7 +89,7 @@ class ManageController extends GetxController {
       print(response);
       if (response['status'] == 200) {
         showtoast(_gloabalkey, "standard updated", false);
-        onInit();
+        onInit(); 
         return;
       } else {
         showtoast(_gloabalkey, "Something went wrong", true);
