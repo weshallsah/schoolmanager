@@ -571,7 +571,7 @@ class droplist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print(controller.items);
-    print(controller.selectedDivision.value);
+    // print(controller.selectedDivision.value);
     return Obx(
       () => DropdownButton(
         value: type == 0

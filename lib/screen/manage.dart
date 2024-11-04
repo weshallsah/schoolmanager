@@ -45,6 +45,7 @@ class Manage extends StatelessWidget {
                             image: DecorationImage(
                               image: NetworkImage(
                                   "http://10.0.2.2:9000/api/v1/teacher/viewphoto/${manageController.list[index]['photo']}"),
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),
