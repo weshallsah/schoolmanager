@@ -1,12 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:schoolmanager/controller/splash.controller.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/Bonafide.dart';
 import 'package:schoolmanager/screen/Leaveing.dart';
@@ -15,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:schoolmanager/screen/progress.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/constant.dart';
-import 'package:schoolmanager/utils/snakbar.dart';
 
 class HomeController extends GetxController {
   RxList<String> name = ["attendance", "bonafide", "certificate", "leave"].obs;

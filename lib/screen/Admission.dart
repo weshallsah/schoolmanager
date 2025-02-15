@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/auth.controller.dart';
-import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
 import 'package:schoolmanager/screen/progress.dart';

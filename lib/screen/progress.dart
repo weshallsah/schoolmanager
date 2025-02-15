@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:schoolmanager/controller/Leaving.controller.dart';
 import 'package:schoolmanager/controller/progress.controller.dart';
-import 'package:schoolmanager/screen/Leaveing.dart';
-import 'package:schoolmanager/screen/marks.dart';
 import 'package:schoolmanager/screen/showimage.dart';
 
 class ProgressCard extends StatelessWidget {

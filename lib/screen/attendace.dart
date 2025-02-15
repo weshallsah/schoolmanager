@@ -3,9 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:horizontal_week_calendar/horizontal_week_calendar.dart';
 import 'package:schoolmanager/controller/attendance.controller.dart';
-import 'package:schoolmanager/main.dart';
 import 'package:schoolmanager/screen/progress.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class Attendancescreen extends StatelessWidget {
   Attendancescreen({super.key});

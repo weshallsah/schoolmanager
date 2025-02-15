@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/constant.dart';

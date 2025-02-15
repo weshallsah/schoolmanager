@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,12 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/auth.controller.dart';
-import 'package:schoolmanager/main.dart';
-import 'package:http/http.dart' as http;
-import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/screen/home.dart';
-import 'package:schoolmanager/screen/progress.dart';
-import 'package:schoolmanager/service/auth.service.dart';
 
 class Authscreen extends StatelessWidget {
   Authscreen({super.key});

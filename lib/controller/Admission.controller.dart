@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:schoolmanager/models/user.models.dart';
 import 'package:schoolmanager/service/auth.service.dart';
 import 'package:schoolmanager/utils/constant.dart';

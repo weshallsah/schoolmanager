@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:schoolmanager/controller/Admission.controller.dart';
 import 'package:schoolmanager/controller/Recurit.controller.dart';
 import 'package:schoolmanager/controller/auth.controller.dart';
-import 'package:schoolmanager/controller/home.controller.dart';
 import 'package:schoolmanager/screen/auth.dart';
 import 'package:schoolmanager/screen/home.dart';
 import 'package:schoolmanager/screen/progress.dart';
